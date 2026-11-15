@@ -1,0 +1,72 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 5 0 R /Outlines 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Outlines /First 3 0 R /Last 4 0 R /Count 2 >>
+endobj
+3 0 obj
+<< /Title (1. Executive OGMP 2.0 Summary) /Parent 2 0 R /Next 4 0 R /Dest [6 0 R /XYZ 0 792 null] >>
+endobj
+4 0 obj
+<< /Title (2. Basin Telemetry & Seal Verification) /Parent 2 0 R /Prev 3 0 R /Dest [8 0 R /XYZ 0 792 null] >>
+endobj
+5 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R] /Count 2 >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 5 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 10 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 697 >>
+stream
+BT
+/F1 18 Tf 48 736 Td (AtmosOps OGMP 2.0 Gold Standard Certificate) Tj
+/F1 11 Tf 0 -28 Td (Document ID: EPA-SUBPART-W-2026-0842  |  Status: VERIFIED SEALED) Tj
+0 -22 Td (Facility: Permian Basin Compressor Station B-4 \(Midland Sector\)) Tj
+0 -22 Td (Satellite Pass: AtmosSat-4 Orbit #14892  |  SWIR 1650nm Band) Tj
+0 -28 Td (Executive Summary:) Tj
+0 -18 Td (1. Initial super-emitter plume detected at 142.8 kg/hr CH4 flux.) Tj
+0 -18 Td (2. Automated SCADA isolation valve XV-402 actuated in 42 seconds.) Tj
+0 -18 Td (3. Field LDAR crew verified flange gasket replacement via OGI camera.) Tj
+0 -18 Td (4. Post-repair orbital overpass confirmed residual flux < 0.4 kg/hr \(99.7% reduction\).) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 5 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 10 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 490 >>
+stream
+BT
+/F1 16 Tf 48 736 Td (Page 2: Basin Telemetry Ledger & Isotopic Signature) Tj
+/F1 11 Tf 0 -26 Td (Isotopic d13C-CH4: -41.8 permil \(Thermogenic Natural Gas Confirmed\)) Tj
+0 -20 Td (Sensor Nodes Audited: SEN-PERM-101 through SEN-PERM-118) Tj
+0 -20 Td (Calibration Firmware: AtmosEdge v2.5.0 \(SHA-256 Verified\)) Tj
+0 -20 Td (Verified Carbon Abatement Yield: 1,240 tCO2e \(GWP-100 = 29.8\)) Tj
+0 -26 Td (Lead Compliance Auditor: Dr. Elena Vance, PE  |  Regulator Sign-Off: APPROVED) Tj
+ET
+endstream
+endobj
+10 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000074 00000 n 
+0000000145 00000 n 
+0000000261 00000 n 
+0000000386 00000 n 
+0000000449 00000 n 
+0000000576 00000 n 
+0000001324 00000 n 
+0000001451 00000 n 
+0000001992 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+2063
+%%EOF

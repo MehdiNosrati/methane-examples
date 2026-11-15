@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380">
+  <defs>
+    <radialGradient id="plume" cx="35%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.95"/>
+      <stop offset="38%" stop-color="#f97316" stop-opacity="0.80"/>
+      <stop offset="72%" stop-color="#eab308" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="380" fill="#0f172a"/>
+  <path d="M0 95 L640 130 M190 0 L215 380 M440 0 L420 380" stroke="#1e293b" stroke-width="8"/>
+  <rect x="240" y="145" width="140" height="90" rx="6" fill="#334155" stroke="#64748b" stroke-width="2"/>
+  <ellipse cx="435" cy="168" rx="165" ry="72" transform="rotate(-14 435 168)" fill="url(#plume)"/>
+  <circle cx="362" cy="188" r="7" fill="#fff" stroke="#ef4444" stroke-width="3"/>
+  <text x="20" y="34" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="15" font-weight="700">SWIR Methane Column Retrieval (1650nm CH4 Absorption)</text>
+  <text x="20" y="54" fill="#fca5a5" font-family="monospace" font-size="12">Peak Enhancement: +1,840 ppb · Flux: 142.8 ± 9.4 kg/hr · Wind 248° 6.2 m/s</text>
+</svg>

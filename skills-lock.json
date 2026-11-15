@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "skills": {
+    "methane-contribute": {
+      "source": "MehdiNosrati/methane",
+      "sourceType": "github",
+      "skillPath": "skills/methane-contribute/SKILL.md",
+      "computedHash": "852e409d426926072177767b13950c083fc281a7bc692057bbdf2846565b33c5"
+    },
+    "methane-ssr": {
+      "source": "MehdiNosrati/methane",
+      "sourceType": "github",
+      "skillPath": "skills/methane-ssr/SKILL.md",
+      "computedHash": "65cc6390e7e57f88c4212fd5144caa6787800f041194ca546e71d21f4c8dc391"
+    },
+    "methane-theming": {
+      "source": "MehdiNosrati/methane",
+      "sourceType": "github",
+      "skillPath": "skills/methane-theming/SKILL.md",
+      "computedHash": "1f4763d201ac9545ab347c55e31aaaf84649a323b54aaf17e031ba7daf684a2b"
+    },
+    "methane-ui": {
+      "source": "MehdiNosrati/methane",
+      "sourceType": "github",
+      "skillPath": "skills/methane-ui/SKILL.md",
+      "computedHash": "6dcfa7a9ee0ea1198143f454ab8f1b1f93ea076d5f2c10441553ae43bedcddfd"
+    }
+  }
+}

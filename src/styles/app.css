@@ -1,0 +1,76 @@
+@import '@methane-ui/css/layers.css';
+@import '@methane-ui/tokens/tokens.css';
+@import '@methane-ui/css/index.css';
+
+:root {
+  --mth-color-seed-brand: oklch(0.58 0.20 175);
+}
+
+.atmos-surface-card {
+  background: var(--mth-color-surface, Canvas);
+  border: 1px solid var(--mth-color-border, ButtonBorder);
+  border-radius: var(--mth-radius-lg, 0.75rem);
+  padding-block: var(--mth-space-4, 1rem);
+  padding-inline: var(--mth-space-4, 1rem);
+}
+
+.atmos-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--mth-space-3, 0.75rem);
+}
+
+.atmos-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mth-space-3, 0.75rem);
+  padding-block-end: var(--mth-space-2, 0.5rem);
+  border-block-end: 1px solid var(--mth-color-border, ButtonBorder);
+}
+
+.atmos-mono-pill {
+  font-family: var(--mth-font-mono, ui-monospace, monospace);
+  font-size: var(--mth-font-size-xs, 0.75rem);
+  padding-block: 0.15rem;
+  padding-inline: 0.5rem;
+  border-radius: var(--mth-radius-full, 9999px);
+  background: var(--mth-color-bg-subtle, Canvas);
+  border: 1px solid var(--mth-color-border, ButtonBorder);
+}
+
+.atmos-coverage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  gap: var(--mth-space-2, 0.5rem);
+}
+
+/* Public Shadow DOM styling tiers: ::part() and :state() */
+mth-button::part(control) {
+  letter-spacing: 0.01em;
+}
+
+mth-input:state(invalid)::part(control),
+mth-input:state(user-invalid)::part(control) {
+  border-color: var(--mth-color-danger, Highlight);
+}
+
+mth-button:state(loading)::part(control) {
+  opacity: 0.85;
+}
+
+/* Upstream MthCard toggles [hidden] on @slotchange, which does not fire for pre-slotted DSD SSR children */
+mth-card:has(> [slot='header'])::part(header),
+mth-card:has(> [slot='media'])::part(media),
+mth-card:has(> [slot='footer'])::part(footer) {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+  }
+}

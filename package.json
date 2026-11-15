@@ -1,0 +1,68 @@
+{
+  "name": "methane-examples",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AtmosOps — Planetary Methane & Climate Telemetry Command Platform showcasing 100% of Methane UI v0.1.1",
+  "type": "module",
+  "packageManager": "pnpm@10.6.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "tsx server.ts",
+    "build": "vite build --outDir dist/client && vite build --ssr src/entry-server.ts --outDir dist/server",
+    "start": "NODE_ENV=production tsx server.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@lit/context": "^1.1.4",
+    "@methane-ui/3d": "^0.1.1",
+    "@methane-ui/admin": "^0.1.1",
+    "@methane-ui/ai": "^0.1.1",
+    "@methane-ui/auth": "^0.1.1",
+    "@methane-ui/charts": "^0.1.1",
+    "@methane-ui/chat": "^0.1.1",
+    "@methane-ui/code": "^0.1.1",
+    "@methane-ui/codemod": "^0.1.1",
+    "@methane-ui/commerce": "^0.1.1",
+    "@methane-ui/core": "^0.1.1",
+    "@methane-ui/css": "^0.1.1",
+    "@methane-ui/datagrid": "^0.1.1",
+    "@methane-ui/editor": "^0.1.1",
+    "@methane-ui/flow": "^0.1.1",
+    "@methane-ui/locales": "^0.1.1",
+    "@methane-ui/maps": "^0.1.1",
+    "@methane-ui/media": "^0.1.1",
+    "@methane-ui/pdf": "^0.1.1",
+    "@methane-ui/primitives": "^0.1.1",
+    "@methane-ui/rtc": "^0.1.1",
+    "@methane-ui/sanitize": "^0.1.1",
+    "@methane-ui/spreadsheet": "^0.1.1",
+    "@methane-ui/ssr": "^0.1.1",
+    "@methane-ui/tokens": "^0.1.1",
+    "@methane-ui/ui": "^0.1.1",
+    "lit": "^3.3.3",
+    "pdfjs-dist": "^6.5.438"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@methane-ui/lint-plugin": "^0.1.1",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^22.13.0",
+    "eslint": "^10.0.0",
+    "jsdom": "^26.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.26.0",
+    "vite": "^6.2.0",
+    "vitest": "^3.0.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

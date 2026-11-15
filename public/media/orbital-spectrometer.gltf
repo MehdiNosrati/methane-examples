@@ -1,0 +1,283 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "AtmosOps CAD Exporter"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "AtmosSat4",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "SatelliteRoot",
+      "children": [
+        1,
+        2,
+        3
+      ],
+      "rotation": [
+        0.12,
+        0.35,
+        0,
+        0.929
+      ]
+    },
+    {
+      "name": "BusChassis",
+      "mesh": 0
+    },
+    {
+      "name": "SolarArrayWing",
+      "mesh": 1,
+      "translation": [
+        0,
+        0.1,
+        0
+      ]
+    },
+    {
+      "name": "SwirSpectrometerOptics",
+      "mesh": 2,
+      "translation": [
+        0,
+        -0.68,
+        0
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "GoldMLIFoil",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.88,
+          0.68,
+          0.22,
+          1
+        ],
+        "metallicFactor": 0.85,
+        "roughnessFactor": 0.28
+      }
+    },
+    {
+      "name": "PhotovoltaicBlue",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.09,
+          0.36,
+          0.68,
+          1
+        ],
+        "metallicFactor": 0.55,
+        "roughnessFactor": 0.22
+      }
+    },
+    {
+      "name": "TealOpticsHousing",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.12,
+          0.72,
+          0.62,
+          1
+        ],
+        "metallicFactor": 0.7,
+        "roughnessFactor": 0.3
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "BusMesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1
+          },
+          "indices": 2,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "SolarMesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 3,
+            "NORMAL": 4
+          },
+          "indices": 5,
+          "material": 1
+        }
+      ]
+    },
+    {
+      "name": "OpticsMesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 6,
+            "NORMAL": 7
+          },
+          "indices": 8,
+          "material": 2
+        }
+      ]
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 1944,
+      "uri": "data:application/octet-stream;base64,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"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 288,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 576,
+      "byteLength": 72,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 648,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 936,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1224,
+      "byteLength": 72,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1296,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1584,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1872,
+      "byteLength": 72,
+      "target": 34963
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [
+        -0.45,
+        -0.45,
+        -0.55
+      ],
+      "max": [
+        0.45,
+        0.45,
+        0.55
+      ]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5123,
+      "count": 36,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [
+        -1.7,
+        -0.025,
+        -0.375
+      ],
+      "max": [
+        1.7,
+        0.025,
+        0.375
+      ]
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5123,
+      "count": 36,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [
+        -0.21,
+        -0.275,
+        -0.21
+      ],
+      "max": [
+        0.21,
+        0.275,
+        0.21
+      ]
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5123,
+      "count": 36,
+      "type": "SCALAR"
+    }
+  ]
+}
