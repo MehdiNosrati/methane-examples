@@ -1,3 +1,5 @@
+import { withRoutePath } from '../base-path.js';
+
 export * from './spatial-data.js';
 export * from './telemetry-data.js';
 export * from './operations-data.js';
@@ -5,24 +7,24 @@ export * from './war-room-data.js';
 export * from './commerce-auth-data.js';
 
 export const SHELL_COMMAND_PALETTE_ITEMS = [
-  { id: 'nav-overview', label: 'Go to Mission Overview & Public Briefing', group: 'Navigation', shortcut: 'G O', href: '/' },
-  { id: 'nav-spatial', label: 'Go to Spatial Plume Twin & Floor/Seat Maps', group: 'Navigation', shortcut: 'G S', href: '/spatial' },
-  { id: 'nav-telemetry', label: 'Go to Telemetry Charts, Grids & OGMP Workbook', group: 'Navigation', shortcut: 'G T', href: '/telemetry' },
-  { id: 'nav-operations', label: 'Go to Field Dispatch, Workflows & Runbooks', group: 'Navigation', shortcut: 'G F', href: '/operations' },
-  { id: 'nav-war-room', label: 'Go to Incident War-Room, WebRTC & AtmosAI', group: 'Navigation', shortcut: 'G W', href: '/war-room' },
-  { id: 'nav-commerce', label: 'Go to Sensor Storefront, Carbon Credits & IAM', group: 'Navigation', shortcut: 'G C', href: '/commerce-auth' },
-  { id: 'nav-studio', label: 'Open Theme, OKLCH DTCG, RTL & 256-Tag Studio', group: 'Studio & Diagnostics', shortcut: 'G D', href: '/studio' },
+  { id: 'nav-overview', label: 'Go to Mission Overview & Public Briefing', group: 'Navigation', shortcut: 'G O', href: withRoutePath('/') },
+  { id: 'nav-spatial', label: 'Go to Spatial Plume Twin & Floor/Seat Maps', group: 'Navigation', shortcut: 'G S', href: withRoutePath('/spatial') },
+  { id: 'nav-telemetry', label: 'Go to Telemetry Charts, Grids & OGMP Workbook', group: 'Navigation', shortcut: 'G T', href: withRoutePath('/telemetry') },
+  { id: 'nav-operations', label: 'Go to Field Dispatch, Workflows & Runbooks', group: 'Navigation', shortcut: 'G F', href: withRoutePath('/operations') },
+  { id: 'nav-war-room', label: 'Go to Incident War-Room, WebRTC & AtmosAI', group: 'Navigation', shortcut: 'G W', href: withRoutePath('/war-room') },
+  { id: 'nav-commerce', label: 'Go to Sensor Storefront, Carbon Credits & IAM', group: 'Navigation', shortcut: 'G C', href: withRoutePath('/commerce-auth') },
+  { id: 'nav-studio', label: 'Open Theme, OKLCH DTCG, RTL & 256-Tag Studio', group: 'Studio & Diagnostics', shortcut: 'G D', href: withRoutePath('/studio') },
   { id: 'act-dark', label: 'Toggle Dark / Light Perceptual OKLCH Theme', group: 'Appearance', keywords: ['theme', 'dark', 'light', 'oklch'] },
   { id: 'act-rtl', label: 'Switch Locale to Arabic (RTL) / English (LTR)', group: 'Localization', keywords: ['rtl', 'arabic', 'hebrew', 'i18n'] },
 ] as const;
 
 export const SHELL_SITE_SEARCH_ITEMS = [
-  { id: 'sr-b4', label: 'Permian Compressor Station B-4 (142.8 kg/hr)', category: 'Active Incident', href: '/spatial', snippet: 'SWIR Orbit #14892 · Valve XV-402 isolated in 42s' },
-  { id: 'sr-ogmp', label: 'OGMP 2.0 Emission Factor Workbook', category: 'Telemetry Ledger', href: '/telemetry', snippet: 'Live =SUM() and GWP-100 tCO2e spreadsheet formulas' },
-  { id: 'sr-sop', label: 'SOP-402 Flange Isolation & KaTeX Plume Model', category: 'Runbooks & PDF', href: '/operations', snippet: 'ProseMirror postmortem, Gaussian equation & EPA PDF' },
-  { id: 'sr-ai', label: 'AtmosAI Stream Sanitizer & XSS Firewall', category: 'AI & Security', href: '/war-room', snippet: 'Live @methane-ui/sanitize red-team payload neutralizer' },
-  { id: 'sr-tdlas', label: 'AtmosSense TDLAS-400 Open-Path Spectrometer', category: 'Hardware & Credits', href: '/commerce-auth', snippet: '0.05 ppm sensitivity · Class I Div 1 solar node' },
-  { id: 'sr-dtcg', label: 'W3C DTCG Token Compiler & 256-Tag Coverage Audit', category: 'Theme Studio', href: '/studio', snippet: 'Live compileDtcgTokens(), <atmos-*> prefix & DSD SSR' },
+  { id: 'sr-b4', label: 'Permian Compressor Station B-4 (142.8 kg/hr)', category: 'Active Incident', href: withRoutePath('/spatial'), snippet: 'SWIR Orbit #14892 · Valve XV-402 isolated in 42s' },
+  { id: 'sr-ogmp', label: 'OGMP 2.0 Emission Factor Workbook', category: 'Telemetry Ledger', href: withRoutePath('/telemetry'), snippet: 'Live =SUM() and GWP-100 tCO2e spreadsheet formulas' },
+  { id: 'sr-sop', label: 'SOP-402 Flange Isolation & KaTeX Plume Model', category: 'Runbooks & PDF', href: withRoutePath('/operations'), snippet: 'ProseMirror postmortem, Gaussian equation & EPA PDF' },
+  { id: 'sr-ai', label: 'AtmosAI Stream Sanitizer & XSS Firewall', category: 'AI & Security', href: withRoutePath('/war-room'), snippet: 'Live @methane-ui/sanitize red-team payload neutralizer' },
+  { id: 'sr-tdlas', label: 'AtmosSense TDLAS-400 Open-Path Spectrometer', category: 'Hardware & Credits', href: withRoutePath('/commerce-auth'), snippet: '0.05 ppm sensitivity · Class I Div 1 solar node' },
+  { id: 'sr-dtcg', label: 'W3C DTCG Token Compiler & 256-Tag Coverage Audit', category: 'Theme Studio', href: withRoutePath('/studio'), snippet: 'Live compileDtcgTokens(), <atmos-*> prefix & DSD SSR' },
 ] as const;
 
 export const BRIEFING_COMPARISON_PLANS = [

@@ -4,7 +4,7 @@ import {
   SHELL_SITE_SEARCH_ITEMS,
 } from '../data/index.js';
 import { SUPPORTED_ATMOS_LOCALES } from '../coverage-manifest.js';
-import { resolveRouteFromPathname, ROUTE_TO_PATH } from '../state.js';
+import { getRouteHref, resolveRouteFromPathname } from '../state.js';
 import type {
   AtmosActions,
   AtmosDensityMode,
@@ -14,76 +14,77 @@ import type {
   AtmosViewModule,
 } from '../types.js';
 
-const SIDEBAR_ITEMS = [
-  { value: 'overview', label: 'Mission Overview', href: '/', group: 'Command Deck', badge: 'Live' },
-  { value: 'spatial', label: 'Spatial Plume Twin', href: '/spatial', group: 'Command Deck', badge: '3D+Map' },
-  { value: 'telemetry', label: 'Telemetry & Ledger', href: '/telemetry', group: 'Analytics', badge: '120' },
-  { value: 'operations', label: 'Dispatch & Runbooks', href: '/operations', group: 'Operations', badge: 'P0' },
-  { value: 'war-room', label: 'War-Room & AtmosAI', href: '/war-room', group: 'Operations', badge: 'RTC' },
-  { value: 'commerce-auth', label: 'Sensors, Credits & IAM', href: '/commerce-auth', group: 'Enterprise' },
-  { value: 'studio', label: 'Theme, RTL & 256 Audit', href: '/studio', group: 'Platform Studio', badge: '256' },
-] as const;
-
-const BOTTOM_NAV_ITEMS = [
-  { value: 'overview', label: 'Overview', href: '/' },
-  { value: 'spatial', label: 'Spatial', href: '/spatial', badge: '3D' },
-  { value: 'telemetry', label: 'Telemetry', href: '/telemetry' },
-  { value: 'war-room', label: 'AtmosAI', href: '/war-room' },
-  { value: 'studio', label: 'Studio', href: '/studio', badge: '256' },
-] as const;
-
-const MENUBAR_ITEMS = [
-  {
-    value: 'constellation',
-    label: 'Constellation',
-    children: [
-      { value: 'overview', label: 'Mission Overview', href: '/', shortcut: 'G O' },
-      { value: 'spatial', label: 'Orbital & Basin Maps', href: '/spatial', shortcut: 'G S' },
-      { value: 'telemetry', label: 'OGMP 2.0 Workbook', href: '/telemetry', shortcut: 'G T' },
+function createNavigationData() {
+  return {
+    sidebarItems: [
+      { value: 'overview', label: 'Mission Overview', href: getRouteHref('overview'), group: 'Command Deck', badge: 'Live' },
+      { value: 'spatial', label: 'Spatial Plume Twin', href: getRouteHref('spatial'), group: 'Command Deck', badge: '3D+Map' },
+      { value: 'telemetry', label: 'Telemetry & Ledger', href: getRouteHref('telemetry'), group: 'Analytics', badge: '120' },
+      { value: 'operations', label: 'Dispatch & Runbooks', href: getRouteHref('operations'), group: 'Operations', badge: 'P0' },
+      { value: 'war-room', label: 'War-Room & AtmosAI', href: getRouteHref('war-room'), group: 'Operations', badge: 'RTC' },
+      { value: 'commerce-auth', label: 'Sensors, Credits & IAM', href: getRouteHref('commerce-auth'), group: 'Enterprise' },
+      { value: 'studio', label: 'Theme, RTL & 256 Audit', href: getRouteHref('studio'), group: 'Platform Studio', badge: '256' },
     ],
-  },
-  {
-    value: 'response',
-    label: 'Response',
-    children: [
-      { value: 'operations', label: 'LDAR Dispatch & SOPs', href: '/operations', shortcut: 'G F' },
-      { value: 'war-room', label: 'Incident War-Room', href: '/war-room', shortcut: 'G W' },
-      { value: 'commerce-auth', label: 'Hardware & RBAC IAM', href: '/commerce-auth', shortcut: 'G C' },
+    bottomNavItems: [
+      { value: 'overview', label: 'Overview', href: getRouteHref('overview') },
+      { value: 'spatial', label: 'Spatial', href: getRouteHref('spatial'), badge: '3D' },
+      { value: 'telemetry', label: 'Telemetry', href: getRouteHref('telemetry') },
+      { value: 'war-room', label: 'AtmosAI', href: getRouteHref('war-room') },
+      { value: 'studio', label: 'Studio', href: getRouteHref('studio'), badge: '256' },
     ],
-  },
-  {
-    value: 'diagnostics',
-    label: 'Diagnostics',
-    children: [
-      { value: 'studio', label: 'OKLCH, DTCG & 256 Coverage', href: '/studio', shortcut: 'G D' },
-    ],
-  },
-] as const;
-
-const MEGA_MENU_SECTIONS = [
-  {
-    id: 'sectors',
-    label: 'Monitored Basins',
-    columns: [
+    menubarItems: [
       {
-        title: 'Americas Orbital Sector',
-        links: [
-          { label: 'Permian Midland B-4', href: '/spatial', description: '142.8 kg/hr plume · Valve XV-402 sealed' },
-          { label: 'Appalachian Marcellus', href: '/telemetry', description: '286 TDLAS nodes · OGMP Level 5 Gold' },
-          { label: 'Neuquén Vaca Muerta', href: '/operations', description: 'UAV-07 aerial thermal verification' },
+        value: 'constellation',
+        label: 'Constellation',
+        children: [
+          { value: 'overview', label: 'Mission Overview', href: getRouteHref('overview'), shortcut: 'G O' },
+          { value: 'spatial', label: 'Orbital & Basin Maps', href: getRouteHref('spatial'), shortcut: 'G S' },
+          { value: 'telemetry', label: 'OGMP 2.0 Workbook', href: getRouteHref('telemetry'), shortcut: 'G T' },
         ],
       },
       {
-        title: 'Governance & Clearinghouse',
-        links: [
-          { label: 'AtmosAI Sanitizer Firewall', href: '/war-room', description: 'Streaming Markdown + XSS defense' },
-          { label: 'Carbon Credit Settlement', href: '/commerce-auth', description: 'ISO-14064 verified abatement blocks' },
-          { label: 'Theme, RTL & DSD SSR Studio', href: '/studio', description: 'Live DTCG compiler & 256-tag audit' },
+        value: 'response',
+        label: 'Response',
+        children: [
+          { value: 'operations', label: 'LDAR Dispatch & SOPs', href: getRouteHref('operations'), shortcut: 'G F' },
+          { value: 'war-room', label: 'Incident War-Room', href: getRouteHref('war-room'), shortcut: 'G W' },
+          { value: 'commerce-auth', label: 'Hardware & RBAC IAM', href: getRouteHref('commerce-auth'), shortcut: 'G C' },
+        ],
+      },
+      {
+        value: 'diagnostics',
+        label: 'Diagnostics',
+        children: [
+          { value: 'studio', label: 'OKLCH, DTCG & 256 Coverage', href: getRouteHref('studio'), shortcut: 'G D' },
         ],
       },
     ],
-  },
-] as const;
+    megaMenuSections: [
+      {
+        id: 'sectors',
+        label: 'Monitored Basins',
+        columns: [
+          {
+            title: 'Americas Orbital Sector',
+            links: [
+              { label: 'Permian Midland B-4', href: getRouteHref('spatial'), description: '142.8 kg/hr plume · Valve XV-402 sealed' },
+              { label: 'Appalachian Marcellus', href: getRouteHref('telemetry'), description: '286 TDLAS nodes · OGMP Level 5 Gold' },
+              { label: 'Neuquén Vaca Muerta', href: getRouteHref('operations'), description: 'UAV-07 aerial thermal verification' },
+            ],
+          },
+          {
+            title: 'Governance & Clearinghouse',
+            links: [
+              { label: 'AtmosAI Sanitizer Firewall', href: getRouteHref('war-room'), description: 'Streaming Markdown + XSS defense' },
+              { label: 'Carbon Credit Settlement', href: getRouteHref('commerce-auth'), description: 'ISO-14064 verified abatement blocks' },
+              { label: 'Theme, RTL & DSD SSR Studio', href: getRouteHref('studio'), description: 'Live DTCG compiler & 256-tag audit' },
+            ],
+          },
+        ],
+      },
+    ],
+  } as const;
+}
 
 const SPEED_DIAL_ACTIONS = [
   { label: 'Open Command Palette', value: 'palette' },
@@ -96,13 +97,18 @@ export function renderAppShell(
   actions: AtmosActions,
   activeView: AtmosViewModule,
 ): TemplateResult {
+  const navData = createNavigationData();
+  const activeRouteHref = getRouteHref(state.route);
+  const overviewHref = getRouteHref('overview');
+  const studioHref = getRouteHref('studio');
+
   const activeLocaleMeta =
     SUPPORTED_ATMOS_LOCALES.find((item) => item.code === state.locale) ??
     SUPPORTED_ATMOS_LOCALES[0]!;
 
   const breadcrumbPathItems = [
-    { label: 'AtmosOps Global', href: '/' },
-    { label: activeLocaleMeta.basinControlCenter, href: ROUTE_TO_PATH[state.route] },
+    { label: 'AtmosOps Global', href: overviewHref },
+    { label: activeLocaleMeta.basinControlCenter, href: activeRouteHref },
     { label: activeView.title, current: true },
   ];
 
@@ -129,7 +135,7 @@ export function renderAppShell(
         <mth-flex data-gap="2" data-align="center">
           <span class="atmos-mono-pill">DSD SSR: ${state.ssrStyles}</span>
           <span class="atmos-mono-pill">${state.locale.toUpperCase()} · ${state.dir.toUpperCase()}</span>
-          <a class="mth-btn mth-btn-soft" href="/studio" @click=${(e: MouseEvent) => {
+          <a class="mth-btn mth-btn-soft" href=${studioHref} @click=${(e: MouseEvent) => {
             e.preventDefault();
             actions.navigate('studio');
           }}>256/256 Studio →</a>
@@ -142,7 +148,7 @@ export function renderAppShell(
         <mth-navbar label="AtmosOps Primary Command Bar" sticky>
           <a
             slot="brand"
-            href="/"
+            href=${overviewHref}
             style="font-weight:800;font-size:1.05rem;text-decoration:none;color:var(--mth-color-fg)"
             @click=${(e: MouseEvent) => {
               e.preventDefault();
@@ -155,12 +161,12 @@ export function renderAppShell(
           <mth-flex data-gap="2" data-align="center" style="flex-wrap:wrap">
             <mth-menubar
               label="Mission Systems Menu"
-              .items=${MENUBAR_ITEMS}
+              .items=${navData.menubarItems}
               @mth-select=${onNavSelect}
             ></mth-menubar>
             <mth-mega-menu
               label="Basin & Platform Directory"
-              .sections=${MEGA_MENU_SECTIONS}
+              .sections=${navData.megaMenuSections}
             ></mth-mega-menu>
             <mth-spacer></mth-spacer>
           </mth-flex>
@@ -241,9 +247,9 @@ export function renderAppShell(
           <mth-sidebar-nav
             label="AtmosOps Workspaces"
             active-value=${state.route}
-            active-href=${ROUTE_TO_PATH[state.route]}
+            active-href=${activeRouteHref}
             collapsible
-            .items=${SIDEBAR_ITEMS}
+            .items=${navData.sidebarItems}
             @mth-select=${onNavSelect}
           ></mth-sidebar-nav>
 
@@ -269,8 +275,8 @@ export function renderAppShell(
           <mth-stack data-gap="4">
             <mth-flex data-gap="3" data-align="center" data-justify="between" style="flex-wrap:wrap">
               <mth-breadcrumbs label="Workspace trail">
-                <mth-breadcrumb-item href="/">AtmosOps</mth-breadcrumb-item>
-                <mth-breadcrumb-item href=${ROUTE_TO_PATH[state.route]} current>
+                <mth-breadcrumb-item href=${overviewHref}>AtmosOps</mth-breadcrumb-item>
+                <mth-breadcrumb-item href=${activeRouteHref} current>
                   ${activeView.title}
                 </mth-breadcrumb-item>
               </mth-breadcrumbs>
@@ -351,8 +357,8 @@ export function renderAppShell(
             <mth-bottom-nav
               label="Quick workspace jump"
               active-value=${state.route}
-              active-href=${ROUTE_TO_PATH[state.route]}
-              .items=${BOTTOM_NAV_ITEMS}
+              active-href=${activeRouteHref}
+              .items=${navData.bottomNavItems}
               @mth-select=${onNavSelect}
             ></mth-bottom-nav>
           </mth-flex>

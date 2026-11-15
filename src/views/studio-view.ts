@@ -20,6 +20,7 @@ import {
   DEFAULT_DTCG_TOKENS_JSON,
   FRAMEWORK_CODE_TAB_ITEMS,
 } from '../data/index.js';
+import { isStaticPagesMode, withBasePath } from '../base-path.js';
 import { registerWhiteLabelDemoElements } from '../register-elements.js';
 import { getLoadedLocalePack } from '../state.js';
 import type {
@@ -175,12 +176,48 @@ export const studioView: AtmosViewModule = {
       actions.notify('AutoLoader scan completed with zero unregistered tags!', 'success');
     };
 
-    const fetchSsrEndpoint = async (endpoint: string) => {
+    const fetchSsrTransform = async () => {
       try {
-        const res = await fetch(endpoint);
+        if (isStaticPagesMode()) {
+          const fixtureUrl = withBasePath('/_methane/ssr-transform-sample.json');
+          const res = await fetch(fixtureUrl);
+          const payload = (await res.json()) as { html: string };
+          actions.updateViewUi('ssrInspectorOutput', payload.html.slice(0, 1400));
+          actions.notify(
+            `Loaded pre-rendered transformHtmlDsd() snapshot (${payload.html.length} bytes DSD HTML)`,
+            'success',
+          );
+          return;
+        }
+        const liveUrl = withBasePath('/api/ssr-transform?sample=1');
+        const res = await fetch(liveUrl);
+        if (!res.ok) {
+          const fallbackRes = await fetch(withBasePath('/_methane/ssr-transform-sample.json'));
+          const payload = (await fallbackRes.json()) as { html: string };
+          actions.updateViewUi('ssrInspectorOutput', payload.html.slice(0, 1400));
+          actions.notify(`Loaded DSD transform snapshot (${payload.html.length} bytes)`, 'success');
+          return;
+        }
         const text = await res.text();
         actions.updateViewUi('ssrInspectorOutput', text.slice(0, 1400));
-        actions.notify(`Fetched ${endpoint} (${text.length} bytes DSD HTML)`, 'success');
+        actions.notify(`Fetched ${liveUrl} (${text.length} bytes DSD HTML)`, 'success');
+      } catch (err) {
+        actions.updateViewUi('ssrInspectorOutput', String(err));
+      }
+    };
+
+    const fetchSsrStream = async () => {
+      try {
+        const targetUrl = isStaticPagesMode()
+          ? withBasePath('/_methane/ssr-stream-sample.html')
+          : withBasePath('/api/ssr-stream');
+        let res = await fetch(targetUrl);
+        if (!res.ok && !isStaticPagesMode()) {
+          res = await fetch(withBasePath('/_methane/ssr-stream-sample.html'));
+        }
+        const text = await res.text();
+        actions.updateViewUi('ssrInspectorOutput', text.slice(0, 1400));
+        actions.notify(`Fetched ${targetUrl} (${text.length} bytes DSD HTML)`, 'success');
       } catch (err) {
         actions.updateViewUi('ssrInspectorOutput', String(err));
       }
@@ -456,7 +493,7 @@ export const studioView: AtmosViewModule = {
                   variant="solid"
                   size="sm"
                   data-testid="ssr-transform-btn"
-                  @mth-press=${() => fetchSsrEndpoint('/api/ssr-transform?sample=1')}
+                  @mth-press=${fetchSsrTransform}
                 >
                   Fetch /api/ssr-transform
                 </mth-button>
@@ -464,7 +501,7 @@ export const studioView: AtmosViewModule = {
                   variant="soft"
                   size="sm"
                   data-testid="ssr-stream-btn"
-                  @mth-press=${() => fetchSsrEndpoint('/api/ssr-stream')}
+                  @mth-press=${fetchSsrStream}
                 >
                   Fetch /api/ssr-stream
                 </mth-button>

@@ -41,14 +41,16 @@ litProto.update = function patchedHydrationSafeUpdate(
 import './styles/app.css';
 import { getRuntime } from '@methane-ui/core';
 import { MthToast } from '@methane-ui/ui/toast';
+import { withBasePath } from './base-path.js';
 import { registerAllAtmosElements } from './register-elements.js';
 import { renderAppShell } from './shell/app-shell.js';
 import {
   activateAtmosLocale,
   applyDocumentThemeState,
   createInitialAtmosState,
+  getRouteHref,
+  isAppRoutePathname,
   resolveRouteFromPathname,
-  ROUTE_TO_PATH,
 } from './state.js';
 import { getViewModule } from './views/manifest.js';
 import type { AtmosActions, AtmosRouteId, AtmosState } from './types.js';
@@ -60,8 +62,12 @@ if (typeof window !== 'undefined' && typeof window.fetch === 'function') {
   const nativeFetch = window.fetch.bind(window);
   window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
     const rawUrl = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
-    if (rawUrl.endsWith('/dotlottie-player.wasm') && /^https?:\/\//i.test(rawUrl)) {
-      return nativeFetch('/_methane/dotlottie-player.wasm', init);
+    if (
+      rawUrl.endsWith('/dotlottie-player.wasm') &&
+      /^https?:\/\//i.test(rawUrl) &&
+      !rawUrl.includes('/_methane/dotlottie-player.wasm')
+    ) {
+      return nativeFetch(withBasePath('/_methane/dotlottie-player.wasm'), init);
     }
     return nativeFetch(input, init);
   };
@@ -81,7 +87,7 @@ function readInitialState(): AtmosState {
 
 function buildUrlFromState(state: AtmosState): string {
   const url = new URL(window.location.href);
-  url.pathname = ROUTE_TO_PATH[state.route];
+  url.pathname = getRouteHref(state.route);
   if (state.theme !== 'dark') url.searchParams.set('theme', state.theme);
   else url.searchParams.delete('theme');
 
@@ -179,6 +185,31 @@ async function bootstrapClient(): Promise<void> {
     commitRender();
   }
 
+  // Reconcile URL query/path overrides when serving pre-rendered static Pages HTML (e.g. ?locale=ar or 404.html).
+  const liveUrlState = createInitialAtmosState(window.location.href);
+  if (
+    liveUrlState.route !== state.route ||
+    liveUrlState.theme !== state.theme ||
+    liveUrlState.density !== state.density ||
+    liveUrlState.locale !== state.locale ||
+    liveUrlState.brandSeed !== state.brandSeed ||
+    liveUrlState.ssrStyles !== state.ssrStyles
+  ) {
+    state = {
+      ...state,
+      route: liveUrlState.route,
+      theme: liveUrlState.theme,
+      density: liveUrlState.density,
+      locale: liveUrlState.locale,
+      dir: liveUrlState.dir,
+      brandSeed: liveUrlState.brandSeed,
+      ssrStyles: liveUrlState.ssrStyles,
+    };
+    await activateAtmosLocale(state.locale);
+    applyDocumentThemeState(state);
+    commitRender();
+  }
+
   // Register global ⌘K / Ctrl+K shortcut via Methane's shared HotkeyManager runtime.
   getRuntime().hotkeys.register({
     id: 'atmos-command-palette-shortcut',
@@ -211,8 +242,7 @@ async function bootstrapClient(): Promise<void> {
     if (url.origin !== window.location.origin) {
       return;
     }
-    const knownPaths = new Set<string>(Object.values(ROUTE_TO_PATH));
-    if (knownPaths.has(url.pathname)) {
+    if (isAppRoutePathname(url.pathname)) {
       ev.preventDefault();
       actions.navigate(resolveRouteFromPathname(url.pathname));
     }

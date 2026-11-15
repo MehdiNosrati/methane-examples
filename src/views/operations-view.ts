@@ -46,6 +46,7 @@ import {
   SCADA_FLOW_NODES,
   SENSOR_TRANSFER_LIST_OPTIONS,
 } from '../data/operations-data.js';
+import { withBasePath } from '../base-path.js';
 import type { AtmosActions, AtmosState, AtmosViewModule } from '../types.js';
 
 const OWNED_OPERATIONS_TAGS = getTagsForSlice('view-operations');
@@ -215,7 +216,7 @@ export const operationsView: AtmosViewModule = {
     const pdfStatus = readUi<string>(
       state,
       'ops.pdfStatus',
-      'Offline worker ready (/_methane/pdf.worker.mjs) · Page 1',
+      `Offline worker ready (${withBasePath('/_methane/pdf.worker.mjs')}) · Page 1`,
     );
 
     // Section 6: RRULE + expandRRule, Cron, Pickers & Timers
@@ -982,8 +983,8 @@ export const operationsView: AtmosViewModule = {
                       <mth-badge variant="info">${pdfStatus}</mth-badge>
                     </mth-flex>
                     <mth-pdf-viewer
-                      src="/media/ogmp-compliance-report.pdf"
-                      worker-src="/_methane/pdf.worker.mjs"
+                      src=${withBasePath('/media/ogmp-compliance-report.pdf')}
+                      worker-src=${withBasePath('/_methane/pdf.worker.mjs')}
                       document-title="EPA & OGMP 2.0 Compliance Certificate"
                       show-toolbar
                       show-outline

@@ -1,3 +1,5 @@
+import { withBasePath } from '../base-path.js';
+
 export const OFFLINE_BASIN_MAP_STYLE = {
   version: 8 as const,
   name: 'AtmosOps Offline SWIR Basin Telemetry',
@@ -170,22 +172,22 @@ export const THERMAL_ANNOTATIONS = [
 
 export const PLUME_GALLERY_ITEMS = [
   {
-    src: '/media/plume-swir.svg',
+    src: withBasePath('/media/plume-swir.svg'),
     alt: 'SWIR 1650nm methane column retrieval over Permian Pad B-4',
     caption: 'AtmosSat-4 Orbit #14892 · +1,840 ppb CH4 enhancement',
   },
   {
-    src: '/media/plume-optical.svg',
+    src: withBasePath('/media/plume-optical.svg'),
     alt: 'True-color optical pass over Permian Pad B-4',
     caption: 'Simultaneous RGB framing camera · Clear sky 0% cloud fraction',
   },
   {
-    src: '/media/drone-pad-thermal.svg',
+    src: withBasePath('/media/drone-pad-thermal.svg'),
     alt: 'Mid-wave infrared OGI drone frame of Valve Manifold XV-402',
     caption: 'UAV-07 Hover 18m AGL · Joule-Thomson ΔT -6.4°C signature',
   },
   {
-    src: '/media/orbital-spectrometer-poster.svg',
+    src: withBasePath('/media/orbital-spectrometer-poster.svg'),
     alt: 'AtmosSat-4 Nadir SWIR imaging spectrometer schematic',
     caption: '0.3 nm spectral FWHM · 25m spatial ground pixel',
   },

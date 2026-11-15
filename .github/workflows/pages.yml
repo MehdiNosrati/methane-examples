@@ -1,0 +1,72 @@
+name: Deploy Showcase to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Static DSD Showcase
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck, Lint & Unit Audit
+        run: pnpm typecheck && pnpm lint && pnpm test
+
+      - name: Build static DSD Pages export
+        run: pnpm run build:pages
+
+      - name: Verify Pages artifact contents
+        run: |
+          test -f dist/pages/index.html
+          test -f dist/pages/404.html
+          test -f dist/pages/.nojekyll
+          test -f dist/pages/studio/index.html
+          test -f dist/pages/_methane/pdf.worker.mjs
+          test -f dist/pages/_methane/dotlottie-player.wasm
+          test -f dist/pages/_methane/ssr-transform-sample.json
+          test -f dist/pages/_methane/ssr-stream-sample.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/pages
+
+  deploy:
+    name: Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

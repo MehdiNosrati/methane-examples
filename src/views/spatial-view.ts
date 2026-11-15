@@ -5,6 +5,7 @@ import type { BottomSheetDetent } from '@methane-ui/ui/bottom-sheet';
 import type { CascaderChangeDetail } from '@methane-ui/ui/cascader';
 import type { ContextMenuItem } from '@methane-ui/ui/context-menu';
 import type { DrawingTool } from '@methane-ui/ui/drawing-pad';
+import { withBasePath } from '../base-path.js';
 import { getTagsForSlice } from '../coverage-manifest.js';
 import {
   BASIN_CASCADER_OPTIONS,
@@ -167,7 +168,7 @@ const MASONRY_EVIDENCE_CARDS = Object.freeze([
     metric: '+1,840 ppb CH4 · 142.8 kg/hr',
     summary:
       'Matched-filter retrieval confirms concentrated point-source plume originating at Isolation Valve XV-402.',
-    src: '/media/plume-swir.svg',
+    src: withBasePath('/media/plume-swir.svg'),
     alt: 'SWIR 1650nm methane column retrieval over Permian Pad B-4',
   },
   {
@@ -179,7 +180,7 @@ const MASONRY_EVIDENCE_CARDS = Object.freeze([
     metric: '0.0% Cloud · 25 m GSD',
     summary:
       'Simultaneous nadir optical pass verifies zero flare combustion dropout and unobstructed pad access roads.',
-    src: '/media/plume-optical.svg',
+    src: withBasePath('/media/plume-optical.svg'),
     alt: 'True-color optical pass over Permian Pad B-4',
   },
   {
@@ -191,7 +192,7 @@ const MASONRY_EVIDENCE_CARDS = Object.freeze([
     metric: 'ΔT -6.4 °C @ 18 m AGL',
     summary:
       'UAV-07 mid-wave infrared hover isolates high-velocity gas jetting along west flange gasket of XV-402.',
-    src: '/media/drone-pad-thermal.svg',
+    src: withBasePath('/media/drone-pad-thermal.svg'),
     alt: 'Mid-wave infrared OGI drone frame of Valve Manifold XV-402',
   },
   {
@@ -203,7 +204,7 @@ const MASONRY_EVIDENCE_CARDS = Object.freeze([
     metric: '0.30 nm FWHM · SNR 412',
     summary:
       'On-orbit solar diffuser calibration confirms zero spectral smile drift prior to Permian Sector pass #14892.',
-    src: '/media/orbital-spectrometer-poster.svg',
+    src: withBasePath('/media/orbital-spectrometer-poster.svg'),
     alt: 'AtmosSat-4 Nadir SWIR imaging spectrometer schematic',
   },
 ]);
@@ -655,7 +656,7 @@ export const spatialView: AtmosViewModule = {
                   <mth-card variant="subtle">
                     <span slot="header"><strong>AtmosSat-4 Nadir Telemetry Pulse</strong></span>
                     <mth-lottie
-                      src="/media/orbit-pulse.json"
+                      src=${withBasePath('/media/orbit-pulse.json')}
                       .animationData=${ORBIT_PULSE_LOTTIE_DATA}
                       loop
                       controls
@@ -836,8 +837,8 @@ export const spatialView: AtmosViewModule = {
                 </span>
                 <mth-stack data-gap="3">
                   <mth-model-viewer
-                    src="/media/orbital-spectrometer.gltf"
-                    poster="/media/orbital-spectrometer-poster.svg"
+                    src=${withBasePath('/media/orbital-spectrometer.gltf')}
+                    poster=${withBasePath('/media/orbital-spectrometer-poster.svg')}
                     alt="AtmosSat-4 Nadir SWIR Imaging Spectrometer 3D Hardware Twin"
                     camera-orbit-theta=${orbitTheta}
                     camera-orbit-phi=${orbitPhi}
@@ -905,8 +906,8 @@ export const spatialView: AtmosViewModule = {
                     }}
                   >
                     <mth-image
-                      src="/media/orbital-spectrometer-poster.svg"
-                      fallback-src="/media/plume-swir.svg"
+                      src=${withBasePath('/media/orbital-spectrometer-poster.svg')}
+                      fallback-src=${withBasePath('/media/plume-swir.svg')}
                       alt="AtmosSat-4 SWIR imaging spectrometer optical bench schematic"
                       aspect-ratio="16/9"
                       fit="contain"
@@ -957,14 +958,14 @@ export const spatialView: AtmosViewModule = {
                   >
                     <mth-image
                       slot="before"
-                      src="/media/plume-optical.svg"
+                      src=${withBasePath('/media/plume-optical.svg')}
                       alt="True-color RGB pass over Permian Pad B-4"
                       aspect-ratio="16/9"
                       fit="cover"
                     ></mth-image>
                     <mth-image
                       slot="after"
-                      src="/media/plume-swir.svg"
+                      src=${withBasePath('/media/plume-swir.svg')}
                       alt="SWIR 1650 nm methane column enhancement over Permian Pad B-4"
                       aspect-ratio="16/9"
                       fit="cover"
@@ -981,7 +982,7 @@ export const spatialView: AtmosViewModule = {
                   <strong>UAV-07 OGI Thermal Plume Vector Annotator</strong>
                 </span>
                 <mth-image-annotator
-                  src="/media/drone-pad-thermal.svg"
+                  src=${withBasePath('/media/drone-pad-thermal.svg')}
                   alt="UAV-07 mid-wave infrared frame of Valve Manifold XV-402"
                   tool=${annotatorTool}
                   .annotations=${annotations}
@@ -1056,7 +1057,7 @@ export const spatialView: AtmosViewModule = {
                 </span>
                 <mth-stack data-gap="3">
                   <mth-image-cropper
-                    src="/media/drone-pad-thermal.svg"
+                    src=${withBasePath('/media/drone-pad-thermal.svg')}
                     alt="Crop thermal ROI around Isolation Valve XV-402"
                     aspect-ratio="1.5"
                     zoom=${cropZoom}

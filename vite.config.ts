@@ -8,8 +8,19 @@ const SHARED_LIT_RUNTIME = [
   '@methane-ui/sanitize',
 ];
 
+const rawBasePath = (process.env['ATMOS_BASE_PATH'] ?? '').trim().replace(/\/+$/, '');
+const viteBase =
+  rawBasePath && rawBasePath !== '/'
+    ? `${rawBasePath.startsWith('/') ? rawBasePath : `/${rawBasePath}`}/`
+    : '/';
+const isStaticPagesBuild = process.env['ATMOS_STATIC_PAGES'] === '1';
+
 export default defineConfig({
+  base: viteBase,
   appType: 'custom',
+  define: {
+    __ATMOS_STATIC_PAGES_BUILD__: JSON.stringify(isStaticPagesBuild),
+  },
   resolve: {
     dedupe: SHARED_LIT_RUNTIME,
   },

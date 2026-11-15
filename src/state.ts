@@ -5,6 +5,7 @@ import {
   type MethaneLocalePack,
 } from '@methane-ui/locales';
 import { registerLocalePack, type MessageCatalog } from '@methane-ui/core';
+import { getBasePath, stripBasePath, withRoutePath } from './base-path.js';
 import { DEFAULT_DTCG_TOKENS_JSON } from './data/index.js';
 import type {
   AtmosDensityMode,
@@ -27,8 +28,23 @@ export const ROUTE_TO_PATH: Readonly<Record<AtmosRouteId, '/' | `/${string}`>> =
   studio: '/studio',
 };
 
+const KNOWN_CANONICAL_PATHS = new Set<string>(Object.values(ROUTE_TO_PATH));
+
+export function getRouteHref(route: AtmosRouteId): string {
+  return withRoutePath(ROUTE_TO_PATH[route]);
+}
+
+export function isAppRoutePathname(pathname: string): boolean {
+  const base = getBasePath();
+  if (base && pathname !== base && !pathname.startsWith(`${base}/`)) {
+    return false;
+  }
+  const clean = stripBasePath(pathname).replace(/\/+$/, '') || '/';
+  return KNOWN_CANONICAL_PATHS.has(clean);
+}
+
 export function resolveRouteFromPathname(pathname: string): AtmosRouteId {
-  const clean = pathname.replace(/\/+$/, '') || '/';
+  const clean = stripBasePath(pathname).replace(/\/+$/, '') || '/';
   switch (clean) {
     case '/':
       return 'overview';

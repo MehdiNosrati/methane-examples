@@ -1,9 +1,11 @@
+import { withBasePath } from '../base-path.js';
+
 export const HARDWARE_AND_CARBON_PRODUCTS = [
   {
     id: 'prod-tdlas-pro',
     title: 'AtmosSense TDLAS-400 Open-Path Spectrometer',
     subtitle: '0.05 ppm CH4 sensitivity · Solar + LoRaWAN / SatCom Class I Div 1',
-    imageSrc: '/media/orbital-spectrometer-poster.svg',
+    imageSrc: withBasePath('/media/orbital-spectrometer-poster.svg'),
     imageAlt: 'AtmosSense TDLAS-400 open-path laser methane spectrometer',
     price: 4850,
     compareAtPrice: 5400,
@@ -17,7 +19,7 @@ export const HARDWARE_AND_CARBON_PRODUCTS = [
     id: 'prod-ogi-pod',
     title: 'UAV-OGI Mid-Wave IR Gimbal Payload',
     subtitle: 'Cooled InSb 3.2–3.4 μm core · Real-time IME flux overlay',
-    imageSrc: '/media/drone-pad-thermal.svg',
+    imageSrc: withBasePath('/media/drone-pad-thermal.svg'),
     imageAlt: 'UAV-OGI Mid-Wave IR methane camera payload',
     price: 12900,
     compareAtPrice: 14200,
@@ -31,7 +33,7 @@ export const HARDWARE_AND_CARBON_PRODUCTS = [
     id: 'prod-carbon-100t',
     title: 'Verified CH4 Abatement Block (100 tCO2e)',
     subtitle: 'ISO-14064 & EPA Subpart W audited · Permian Pad B-4 retirement serial',
-    imageSrc: '/media/plume-swir.svg',
+    imageSrc: withBasePath('/media/plume-swir.svg'),
     imageAlt: 'Verified methane abatement carbon credit certificate',
     price: 2900,
     compareAtPrice: 3250,
@@ -83,7 +85,7 @@ export const INITIAL_CART_ITEMS = [
     quantity: 2,
     min: 1,
     max: 20,
-    image: '/media/orbital-spectrometer-poster.svg',
+    image: withBasePath('/media/orbital-spectrometer-poster.svg'),
   },
   {
     id: 'prod-carbon-100t',
@@ -93,7 +95,7 @@ export const INITIAL_CART_ITEMS = [
     quantity: 1,
     min: 1,
     max: 50,
-    image: '/media/plume-swir.svg',
+    image: withBasePath('/media/plume-swir.svg'),
   },
 ] as const;
 

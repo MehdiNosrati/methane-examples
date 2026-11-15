@@ -1,9 +1,11 @@
 import { html } from 'lit';
+import { withBasePath } from '../base-path.js';
 import { getTagsForRoute } from '../coverage-manifest.js';
 import {
   BRIEFING_COMPARISON_PLANS,
   BRIEFING_COMPARISON_ROWS,
 } from '../data/index.js';
+import { getRouteHref } from '../state.js';
 import type { AtmosActions, AtmosState, AtmosViewModule } from '../types.js';
 
 export const overviewBriefingView: AtmosViewModule = {
@@ -144,7 +146,7 @@ export const overviewBriefingView: AtmosViewModule = {
               <mth-carousel-item label="Orbit #14892 · Permian SWIR Retrieval">
                 <div class="mth-aspect-ratio" data-ratio="16/9">
                   <img
-                    src="/media/plume-swir.svg"
+                    src=${withBasePath('/media/plume-swir.svg')}
                     alt="SWIR 1650nm methane column retrieval over Permian Station B-4"
                   />
                 </div>
@@ -152,7 +154,7 @@ export const overviewBriefingView: AtmosViewModule = {
               <mth-carousel-item label="Orbit #14892 · Optical Reference">
                 <div class="mth-aspect-ratio" data-ratio="16/9">
                   <img
-                    src="/media/plume-optical.svg"
+                    src=${withBasePath('/media/plume-optical.svg')}
                     alt="True-color RGB pass over Permian Station B-4"
                   />
                 </div>
@@ -160,7 +162,7 @@ export const overviewBriefingView: AtmosViewModule = {
               <mth-carousel-item label="UAV-07 Thermal OGI Verification">
                 <div class="mth-aspect-ratio" data-ratio="16/9">
                   <img
-                    src="/media/drone-pad-thermal.svg"
+                    src=${withBasePath('/media/drone-pad-thermal.svg')}
                     alt="Mid-wave IR OGI frame of Valve Manifold XV-402"
                   />
                 </div>
@@ -384,15 +386,15 @@ export const overviewBriefingView: AtmosViewModule = {
             </div>
             <div class="mth-footer-links">
               <strong>Command Views</strong>
-              <a href="/spatial">Spatial Plume Twin</a>
-              <a href="/telemetry">Telemetry &amp; Grids</a>
-              <a href="/operations">Field Dispatch &amp; SOPs</a>
+              <a href=${getRouteHref('spatial')}>Spatial Plume Twin</a>
+              <a href=${getRouteHref('telemetry')}>Telemetry &amp; Grids</a>
+              <a href=${getRouteHref('operations')}>Field Dispatch &amp; SOPs</a>
             </div>
             <div class="mth-footer-links">
               <strong>Enterprise &amp; Studio</strong>
-              <a href="/war-room">War-Room &amp; AtmosAI</a>
-              <a href="/commerce-auth">Hardware &amp; Zero-Trust IAM</a>
-              <a href="/studio">Theme, RTL &amp; 256-Tag Audit</a>
+              <a href=${getRouteHref('war-room')}>War-Room &amp; AtmosAI</a>
+              <a href=${getRouteHref('commerce-auth')}>Hardware &amp; Zero-Trust IAM</a>
+              <a href=${getRouteHref('studio')}>Theme, RTL &amp; 256-Tag Audit</a>
             </div>
           </div>
           <div class="mth-footer-bottom">

@@ -28,6 +28,7 @@ import {
   type StylesheetLink,
   type TransformHtmlDsdResult,
 } from '@methane-ui/ssr';
+import { getBasePath, isStaticPagesMode, withBasePath } from './base-path.js';
 import { registerAllAtmosElements } from './register-elements.js';
 import { renderAppShell } from './shell/app-shell.js';
 import { activateAtmosLocale, createInitialAtmosState } from './state.js';
@@ -85,10 +86,11 @@ export async function renderUrlToHtml(
   const state = createInitialAtmosState(url);
   await activateAtmosLocale(state.locale);
 
+  const stylesAssetBase = withBasePath('/_methane/styles');
   const activeView = getViewModule(state.route);
   const ssrResult = await renderWithMetadata(renderAppRoot(state, serverNoopActions), {
     styles: state.ssrStyles,
-    assetBase: '/_methane/styles',
+    assetBase: stylesAssetBase,
     deferHydration: true,
     onStylesheetLink: recordStylesheetLink,
   });
@@ -96,6 +98,13 @@ export async function renderUrlToHtml(
   for (const link of ssrResult.links) {
     recordStylesheetLink(link);
   }
+
+  const basePath = getBasePath();
+  const staticPages = isStaticPagesMode();
+  const headEnvScript =
+    basePath || staticPages
+      ? `<script>window.__ATMOS_BASE_PATH__=${JSON.stringify(basePath)};window.__ATMOS_STATIC_PAGES__=${JSON.stringify(staticPages)};</script>`
+      : '';
 
   const pageTitle = `AtmosOps · ${activeView.title}`;
   let documentHtml = htmlTemplate
@@ -105,7 +114,7 @@ export async function renderUrlToHtml(
     .replace('__ATMOS_DENSITY__', escapeHtmlText(state.density))
     .replace('__ATMOS_BRAND_SEED__', escapeHtmlText(state.brandSeed))
     .replace('__ATMOS_TITLE__', escapeHtmlText(pageTitle))
-    .replace('<!--ATMOS_SSR_HEAD-->', '')
+    .replace('<!--ATMOS_SSR_HEAD-->', headEnvScript)
     .replace('<!--ATMOS_SSR_APP-->', () => ssrResult.html)
     .replace('<!--ATMOS_SSR_STATE-->', () => serializeInitialStateScript(state));
 
@@ -133,11 +142,12 @@ export async function getStylesheetCss(hrefOrFileName: string): Promise<string |
 
   if (!warmedAllRoutes) {
     warmedAllRoutes = true;
+    const stylesAssetBase = withBasePath('/_methane/styles');
     for (const view of ATMOS_VIEW_MANIFEST) {
       const warmState = createInitialAtmosState(`http://localhost${view.path}`);
       await renderWithMetadata(renderAppRoot(warmState, serverNoopActions), {
         styles: 'linked',
-        assetBase: '/_methane/styles',
+        assetBase: stylesAssetBase,
         deferHydration: true,
         onStylesheetLink: recordStylesheetLink,
       });
@@ -149,6 +159,17 @@ export async function getStylesheetCss(hrefOrFileName: string): Promise<string |
   }
 
   return null;
+}
+
+export function getAllCachedStylesheets(): ReadonlyArray<StylesheetLink> {
+  const byFile = new Map<string, StylesheetLink>();
+  for (const link of stylesheetAssetCache.values()) {
+    const fileName = link.href.split('/').pop();
+    if (fileName) {
+      byFile.set(fileName, link);
+    }
+  }
+  return [...byFile.values()];
 }
 
 /**
@@ -173,7 +194,7 @@ export function createDemoSsrStream(): ReadableStream<Uint8Array> {
 
   return renderToStream(sampleTemplate, {
     styles: 'linked',
-    assetBase: '/_methane/styles',
+    assetBase: withBasePath('/_methane/styles'),
     onStylesheetLink: recordStylesheetLink,
   }).pipeThrough(
     createSsrTransformStream({
@@ -194,7 +215,7 @@ export async function runDemoTransformHtmlDsd(rawHtml?: string): Promise<Transfo
 
   const result = await transformHtmlDsd(input, {
     styles: 'linked',
-    assetBase: '/_methane/styles',
+    assetBase: withBasePath('/_methane/styles'),
     hoistLinks: true,
     onStylesheetLink: recordStylesheetLink,
   });

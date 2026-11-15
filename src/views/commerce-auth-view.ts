@@ -1,5 +1,6 @@
 import { validateIbanMod97, validateLuhn } from '@methane-ui/primitives';
 import { html } from 'lit';
+import { withBasePath } from '../base-path.js';
 import { getTagsForSlice } from '../coverage-manifest.js';
 import {
   ACTIVE_OPERATOR_SESSIONS,
@@ -225,7 +226,7 @@ export const commerceAuthView: AtmosViewModule = {
             <mth-profile-menu
               name="Dr. Elena Vance"
               email="e.vance@atmosops.io"
-              avatar-src="/media/orbital-spectrometer-poster.svg"
+              avatar-src=${withBasePath('/media/orbital-spectrometer-poster.svg')}
               user-role="Incident Commander · Clearance L4"
               .items=${OPERATOR_PROFILE_MENU_ITEMS}
               @mth-select=${(e: CustomEvent<{ id: string; label: string }>) => {
@@ -485,7 +486,7 @@ export const commerceAuthView: AtmosViewModule = {
                 status=${SAMPLE_SETTLEMENT_INVOICE.status}
                 currency=${SAMPLE_SETTLEMENT_INVOICE.currency}
                 locale=${state.locale}
-                logo-url="/media/orbital-spectrometer-poster.svg"
+                logo-url=${withBasePath('/media/orbital-spectrometer-poster.svg')}
                 .seller=${SAMPLE_SETTLEMENT_INVOICE.seller}
                 .buyer=${SAMPLE_SETTLEMENT_INVOICE.buyer}
                 .items=${SAMPLE_SETTLEMENT_INVOICE.items}

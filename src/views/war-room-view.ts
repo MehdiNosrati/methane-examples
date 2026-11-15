@@ -43,6 +43,7 @@ import {
   WAR_ROOM_REACTIONS,
   WAR_ROOM_VIDEO_PARTICIPANTS,
 } from '../data/war-room-data.js';
+import { withBasePath } from '../base-path.js';
 import type { AtmosActions, AtmosState, AtmosViewModule } from '../types.js';
 
 const WAR_ROOM_OWNED_TAGS = getTagsForSlice('view-war-room');
@@ -917,7 +918,7 @@ export const warRoomView: AtmosViewModule = {
                 <mth-tab-panel value="acoustics">
                   <div class="mth-stack" data-gap="4">
                     <mth-waveform
-                      src="/media/sample.wav"
+                      src=${withBasePath('/media/sample.wav')}
                       .peaks=${ULTRASONIC_WAVEFORM_PEAKS}
                       .duration=${42}
                       .currentTime=${waveformTime}
@@ -934,7 +935,7 @@ export const warRoomView: AtmosViewModule = {
                     ></mth-waveform>
 
                     <mth-audio-player
-                      src="/media/sample.wav"
+                      src=${withBasePath('/media/sample.wav')}
                       title="Pad B-4 XV-402 Heterodyne Ultrasonic Capture"
                       artist="LDAR Truck Alpha · 38 kHz Parabolic Sensor"
                       label="Ultrasonic leak audio evidence player"
@@ -942,8 +943,8 @@ export const warRoomView: AtmosViewModule = {
                     ></mth-audio-player>
 
                     <mth-video-player
-                      src="/media/sample.mp4"
-                      poster="/media/drone-pad-thermal.svg"
+                      src=${withBasePath('/media/sample.mp4')}
+                      poster=${withBasePath('/media/drone-pad-thermal.svg')}
                       label="UAV-07 Mid-Wave IR Plume Verification Sortie"
                       playsinline
                       muted

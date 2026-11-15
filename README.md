@@ -1,5 +1,7 @@
 # AtmosOps — Flagship Methane UI v0.1.1 Showcase
 
+**Live Showcase & Coverage Studio:** [https://mahdins.dev/methane-examples/](https://mahdins.dev/methane-examples/)
+
 **AtmosOps** (*Planetary Methane & Climate Telemetry Command Platform*) is a standalone, cohesive full-stack reference application showcasing **100% of [Methane UI](https://github.com/MehdiNosrati/methane) (`v0.1.1`)** across Declarative Shadow DOM (DSD) Server-Side Rendering, in-place client hydration, OKLCH & W3C DTCG theming, 8-locale LTR/RTL internationalization, defense-in-depth sanitizers, all **256 `mth-*` tags** (`251` Custom Elements + `5` pure-CSS layout tags), all **5 Domain Kits**, and all **11 Satellites**.
 
 ---
@@ -47,6 +49,9 @@ pnpm dev
 
 # Production client + SSR server build & start
 pnpm build && pnpm start
+
+# Pre-render static Declarative Shadow DOM GitHub Pages export (dist/pages)
+pnpm run build:pages
 
 # Strict TypeScript check & ESLint (@methane-ui/lint-plugin/eslint)
 pnpm typecheck
