@@ -63,7 +63,7 @@
   overflow-wrap: anywhere;
 }
 
-/* Ensure solid/accent buttons and FABs always have >= 4.5:1 contrast in dark & light modes */
+/* Ensure solid/accent buttons, soft buttons, accent badges, and sidebar active items have >= 4.5:1 contrast in dark & light modes */
 :is(mth-button, atmos-button):not([variant]),
 :is(mth-button, atmos-button)[variant='solid'],
 mth-fab,
@@ -72,6 +72,42 @@ mth-speed-dial {
   --mth-color-accent-hover: oklch(from var(--mth-color-seed-brand) 0.40 min(c, 0.18) h);
   --mth-color-accent-active: oklch(from var(--mth-color-seed-brand) 0.35 min(c, 0.16) h);
   --mth-color-accent-fg: oklch(0.99 0 0);
+}
+
+:is(mth-button, atmos-button)[variant='soft'],
+:is(mth-badge, atmos-badge)[variant='accent'],
+.mth-btn-soft {
+  --mth-color-accent: light-dark(
+    oklch(from var(--mth-color-seed-brand) 0.36 min(c, 0.18) h),
+    oklch(from var(--mth-color-seed-brand) 0.86 calc(c * 0.65) h)
+  );
+  --mth-color-accent-subtle: light-dark(
+    oklch(from var(--mth-color-seed-brand) 0.93 0.05 h),
+    oklch(from var(--mth-color-seed-brand) 0.27 0.07 h)
+  );
+}
+
+.mth-btn-soft {
+  background-color: var(--mth-color-accent-subtle);
+  color: var(--mth-color-accent);
+  border-color: oklch(from var(--mth-color-accent) l c h / 0.25);
+}
+
+/* Upstream sidebar-nav pairs --mth-color-accent-subtle with --mth-color-accent-fg (which is dark in dark mode and white in light mode) */
+mth-sidebar-nav {
+  --mth-color-accent-subtle: light-dark(
+    oklch(from var(--mth-color-seed-brand) 0.92 0.06 h),
+    oklch(from var(--mth-color-seed-brand) 0.30 0.09 h)
+  );
+  --mth-color-accent-fg: light-dark(
+    oklch(from var(--mth-color-seed-brand) 0.22 0.08 h),
+    oklch(0.96 0.02 175)
+  );
+}
+
+mth-sidebar-nav::part(badge) {
+  color: inherit;
+  border-color: currentColor;
 }
 
 .mth-btn:not(.mth-btn-soft, .mth-btn-outline, .mth-btn-outlined, .mth-btn-ghost, .mth-btn-danger) {
@@ -88,9 +124,23 @@ mth-speed-dial {
 .atmos-navbar-nav {
   display: flex;
   align-items: center;
-  gap: var(--mth-space-2, 0.5rem);
+  gap: var(--mth-space-1, 0.25rem);
   flex-wrap: nowrap;
   min-inline-size: 0;
+  flex-shrink: 0;
+}
+
+.atmos-navbar-nav > *,
+.atmos-navbar-actions > mth-button,
+.atmos-navbar-actions > select {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+mth-button::part(control),
+mth-menubar::part(trigger),
+mth-mega-menu::part(trigger) {
+  white-space: nowrap;
 }
 
 .atmos-navbar-actions {
@@ -102,7 +152,7 @@ mth-speed-dial {
 }
 
 .atmos-navbar-actions mth-site-search {
-  inline-size: clamp(10.5rem, 16vw, 15rem);
+  inline-size: clamp(9rem, 11.5vw, 12.5rem);
   flex-shrink: 1;
 }
 

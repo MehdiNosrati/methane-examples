@@ -153,7 +153,7 @@ export function renderAppShell(
           <a
             slot="brand"
             href=${overviewHref}
-            style="font-weight:800;font-size:1.05rem;text-decoration:none;color:var(--mth-color-fg)"
+            style="display:inline-flex;align-items:center;gap:0.45rem;white-space:nowrap;font-weight:800;font-size:1.05rem;text-decoration:none;color:var(--mth-color-fg)"
             @click=${(e: MouseEvent) => {
               e.preventDefault();
               actions.navigate('overview');
