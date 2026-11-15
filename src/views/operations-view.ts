@@ -377,7 +377,7 @@ export const operationsView: AtmosViewModule = {
             </div>
           </aside>
 
-          <div class="mth-stack" data-gap="6">
+          <div class="mth-stack" data-gap="6" style="min-inline-size: 0;">
             <!-- SECTION 1: LDAR Dispatch Kanban, Overpass Calendar, LiDAR Booking & Crew Availability -->
             <section id="ops-dispatch" class="mth-stack" data-gap="4">
               <mth-card>
@@ -399,39 +399,43 @@ export const operationsView: AtmosViewModule = {
                     ></mth-input>
                   </mth-flex>
 
-                  <mth-kanban
-                    .lanes=${LDAR_KANBAN_LANES}
-                    .cards=${kanbanCards}
-                    filter=${kanbanFilter}
-                    @mth-card-move=${(
-                      e: CustomEvent<{
-                        cardId: string;
-                        fromLaneId: string;
-                        toLaneId: string;
-                        cards: ReadonlyArray<KanbanCard>;
-                      }>,
-                    ) => {
-                      actions.updateViewUi('ops.kanbanCards', e.detail.cards);
-                      actions.notify(
-                        `Ticket ${e.detail.cardId} moved: ${e.detail.fromLaneId} -> ${e.detail.toLaneId}`,
-                        'success',
-                      );
-                    }}
-                    @mth-card-select=${(e: CustomEvent<{ card: KanbanCard }>) => {
-                      actions.notify(
-                        `Inspecting ${e.detail.card.id}: ${e.detail.card.title}`,
-                        'info',
-                      );
-                    }}
-                  ></mth-kanban>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-kanban
+                      style="display: block; min-inline-size: 38rem;"
+                      .lanes=${LDAR_KANBAN_LANES}
+                      .cards=${kanbanCards}
+                      filter=${kanbanFilter}
+                      @mth-card-move=${(
+                        e: CustomEvent<{
+                          cardId: string;
+                          fromLaneId: string;
+                          toLaneId: string;
+                          cards: ReadonlyArray<KanbanCard>;
+                        }>,
+                      ) => {
+                        actions.updateViewUi('ops.kanbanCards', e.detail.cards);
+                        actions.notify(
+                          `Ticket ${e.detail.cardId} moved: ${e.detail.fromLaneId} -> ${e.detail.toLaneId}`,
+                          'success',
+                        );
+                      }}
+                      @mth-card-select=${(e: CustomEvent<{ card: KanbanCard }>) => {
+                        actions.notify(
+                          `Inspecting ${e.detail.card.id}: ${e.detail.card.title}`,
+                          'info',
+                        );
+                      }}
+                    ></mth-kanban>
+                  </div>
                 </mth-stack>
               </mth-card>
 
-              <mth-grid data-columns="2" data-gap="4">
-                <mth-card>
-                  <mth-stack data-gap="3">
-                    <h3>Orbital Overpass & Overhaul Event Calendar</h3>
+              <mth-card>
+                <mth-stack data-gap="3">
+                  <h3>Orbital Overpass & Overhaul Event Calendar</h3>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
                     <mth-event-calendar
+                      style="display: block; min-inline-size: 38rem;"
                       .events=${calendarEvents}
                       view=${calendarView}
                       active-date=${calendarDate}
@@ -459,16 +463,19 @@ export const operationsView: AtmosViewModule = {
                         actions.notify(`Scheduled verification sweep on ${e.detail.date}`, 'success');
                       }}
                     ></mth-event-calendar>
-                  </mth-stack>
-                </mth-card>
+                  </div>
+                </mth-stack>
+              </mth-card>
 
-                <mth-card>
-                  <mth-stack data-gap="3">
-                    <mth-flex data-justify="between" data-align="center" data-wrap="wrap" data-gap="2">
-                      <h3>Airborne LiDAR KingAir N42CH Booking</h3>
-                      <mth-badge variant="accent">${bookingSlot || 'Select Slot'}</mth-badge>
-                    </mth-flex>
+              <mth-card>
+                <mth-stack data-gap="3">
+                  <mth-flex data-justify="between" data-align="center" data-wrap="wrap" data-gap="2">
+                    <h3>Airborne LiDAR KingAir N42CH Booking</h3>
+                    <mth-badge variant="accent">${bookingSlot || 'Select Slot'}</mth-badge>
+                  </mth-flex>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
                     <mth-booking-widget
+                      style="display: block; min-inline-size: 30rem;"
                       name="lidarSortieSlot"
                       value=${bookingSlot}
                       .availableSlots=${AIRCRAFT_BOOKING_SLOTS}
@@ -485,9 +492,9 @@ export const operationsView: AtmosViewModule = {
                         );
                       }}
                     ></mth-booking-widget>
-                  </mth-stack>
-                </mth-card>
-              </mth-grid>
+                  </div>
+                </mth-stack>
+              </mth-card>
 
               <mth-card>
                 <mth-stack data-gap="3">
@@ -495,14 +502,17 @@ export const operationsView: AtmosViewModule = {
                     <h3>On-Call LDAR Crew Weekly Shift Matrix</h3>
                     <mth-badge variant="info">${selectedShiftCount} Active Shift Windows</mth-badge>
                   </mth-flex>
-                  <mth-availability-picker
-                    name="ldarCrewAvailability"
-                    value=${availabilityJson}
-                    .slots=${['06:00', '09:00', '12:00', '15:00', '18:00']}
-                    @mth-change=${(e: CustomEvent<{ value: string }>) => {
-                      actions.updateViewUi('ops.availabilityJson', e.detail.value);
-                    }}
-                  ></mth-availability-picker>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-availability-picker
+                      style="display: block; min-inline-size: 32rem;"
+                      name="ldarCrewAvailability"
+                      value=${availabilityJson}
+                      .slots=${['06:00', '09:00', '12:00', '15:00', '18:00']}
+                      @mth-change=${(e: CustomEvent<{ value: string }>) => {
+                        actions.updateViewUi('ops.availabilityJson', e.detail.value);
+                      }}
+                    ></mth-availability-picker>
+                  </div>
                 </mth-stack>
               </mth-card>
             </section>
@@ -556,41 +566,47 @@ export const operationsView: AtmosViewModule = {
                     ></mth-step>
                   </mth-stepper>
 
-                  <mth-scheduler
-                    label="Field Crew, UAV & Orbital Tasking Scheduler"
-                    start-date="2026-03-09"
-                    days="7"
-                    .resources=${CREW_SCHEDULER_RESOURCES}
-                    .events=${CREW_SCHEDULER_EVENTS}
-                    @mth-event-select=${(
-                      e: CustomEvent<{
-                        event: { title: string; startDate: string; endDate: string };
-                      }>,
-                    ) => {
-                      const summary = `${e.detail.event.title} (${e.detail.event.startDate} -> ${e.detail.event.endDate})`;
-                      actions.updateViewUi('ops.selectedScheduleItem', summary);
-                      actions.notify(`Selected shift: ${summary}`, 'info');
-                    }}
-                  ></mth-scheduler>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-scheduler
+                      style="display: block; min-inline-size: 38rem;"
+                      label="Field Crew, UAV & Orbital Tasking Scheduler"
+                      start-date="2026-03-09"
+                      days="7"
+                      .resources=${CREW_SCHEDULER_RESOURCES}
+                      .events=${CREW_SCHEDULER_EVENTS}
+                      @mth-event-select=${(
+                        e: CustomEvent<{
+                          event: { title: string; startDate: string; endDate: string };
+                        }>,
+                      ) => {
+                        const summary = `${e.detail.event.title} (${e.detail.event.startDate} -> ${e.detail.event.endDate})`;
+                        actions.updateViewUi('ops.selectedScheduleItem', summary);
+                        actions.notify(`Selected shift: ${summary}`, 'info');
+                      }}
+                    ></mth-scheduler>
+                  </div>
 
-                  <mth-gantt
-                    label="14-Day Compressor B-4 Wet-Seal Overhaul Critical Path"
-                    start-date="2026-03-09"
-                    days="14"
-                    show-dependencies
-                    .tasks=${REMEDIATION_GANTT_TASKS}
-                    @mth-task-select=${(
-                      e: CustomEvent<{ task: { title: string; progress?: number } }>,
-                    ) => {
-                      const summary = `${e.detail.task.title} (${e.detail.task.progress ?? 0}% complete)`;
-                      actions.updateViewUi('ops.selectedScheduleItem', summary);
-                      actions.notify(`Gantt milestone: ${summary}`, 'info');
-                    }}
-                  ></mth-gantt>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-gantt
+                      style="display: block; min-inline-size: 38rem;"
+                      label="14-Day Compressor B-4 Wet-Seal Overhaul Critical Path"
+                      start-date="2026-03-09"
+                      days="14"
+                      show-dependencies
+                      .tasks=${REMEDIATION_GANTT_TASKS}
+                      @mth-task-select=${(
+                        e: CustomEvent<{ task: { title: string; progress?: number } }>,
+                      ) => {
+                        const summary = `${e.detail.task.title} (${e.detail.task.progress ?? 0}% complete)`;
+                        actions.updateViewUi('ops.selectedScheduleItem', summary);
+                        actions.notify(`Gantt milestone: ${summary}`, 'info');
+                      }}
+                    ></mth-gantt>
+                  </div>
                 </mth-stack>
               </mth-card>
 
-              <mth-grid data-columns="2" data-gap="4">
+              <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
                 <mth-card>
                   <mth-stack data-gap="3">
                     <h3>INC-842 Chronological Response Timeline</h3>
@@ -688,19 +704,22 @@ export const operationsView: AtmosViewModule = {
                     </mth-flex>
                   </mth-flex>
 
-                  <mth-flow-editor
-                    label="Automated SCADA pressure-drop and emergency shutoff DAG"
-                    direction=${flowDirection}
-                    edge-style=${flowEdgeStyle}
-                    selected-id=${selectedFlowNode}
-                    auto-layout
-                    .nodes=${SCADA_FLOW_NODES}
-                    .edges=${SCADA_FLOW_EDGES}
-                    @mth-node-select=${(e: CustomEvent<{ nodeId: string }>) => {
-                      actions.updateViewUi('ops.selectedFlowNode', e.detail.nodeId);
-                      actions.notify(`Inspecting SCADA DAG stage: ${e.detail.nodeId}`, 'info');
-                    }}
-                  ></mth-flow-editor>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-flow-editor
+                      style="display: block; min-inline-size: 36rem;"
+                      label="Automated SCADA pressure-drop and emergency shutoff DAG"
+                      direction=${flowDirection}
+                      edge-style=${flowEdgeStyle}
+                      selected-id=${selectedFlowNode}
+                      auto-layout
+                      .nodes=${SCADA_FLOW_NODES}
+                      .edges=${SCADA_FLOW_EDGES}
+                      @mth-node-select=${(e: CustomEvent<{ nodeId: string }>) => {
+                        actions.updateViewUi('ops.selectedFlowNode', e.detail.nodeId);
+                        actions.notify(`Inspecting SCADA DAG stage: ${e.detail.nodeId}`, 'info');
+                      }}
+                    ></mth-flow-editor>
+                  </div>
 
                   <mth-flex data-justify="between" data-align="center" data-wrap="wrap" data-gap="2">
                     <h3>Global Incident Command Hierarchy</h3>
@@ -713,29 +732,32 @@ export const operationsView: AtmosViewModule = {
                     ></mth-input>
                   </mth-flex>
 
-                  <mth-org-chart
-                    label="AtmosOps Incident Command Organization Chart"
-                    direction="TB"
-                    query=${orgQuery}
-                    selected-id=${selectedOrgNode}
-                    .collapsedIds=${collapsedOrgIds}
-                    .nodes=${INCIDENT_ORG_CHART_NODES}
-                    @mth-node-select=${(e: CustomEvent<{ nodeId: string }>) => {
-                      actions.updateViewUi('ops.selectedOrgNode', e.detail.nodeId);
-                    }}
-                    @mth-node-toggle=${(
-                      e: CustomEvent<{ nodeId: string; collapsed: boolean }>,
-                    ) => {
-                      const next = e.detail.collapsed
-                        ? [...collapsedOrgIds, e.detail.nodeId]
-                        : collapsedOrgIds.filter((id) => id !== e.detail.nodeId);
-                      actions.updateViewUi('ops.collapsedOrgIds', next);
-                    }}
-                  ></mth-org-chart>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-org-chart
+                      style="display: block; min-inline-size: 36rem;"
+                      label="AtmosOps Incident Command Organization Chart"
+                      direction="TB"
+                      query=${orgQuery}
+                      selected-id=${selectedOrgNode}
+                      .collapsedIds=${collapsedOrgIds}
+                      .nodes=${INCIDENT_ORG_CHART_NODES}
+                      @mth-node-select=${(e: CustomEvent<{ nodeId: string }>) => {
+                        actions.updateViewUi('ops.selectedOrgNode', e.detail.nodeId);
+                      }}
+                      @mth-node-toggle=${(
+                        e: CustomEvent<{ nodeId: string; collapsed: boolean }>,
+                      ) => {
+                        const next = e.detail.collapsed
+                          ? [...collapsedOrgIds, e.detail.nodeId]
+                          : collapsedOrgIds.filter((id) => id !== e.detail.nodeId);
+                        actions.updateViewUi('ops.collapsedOrgIds', next);
+                      }}
+                    ></mth-org-chart>
+                  </div>
                 </mth-stack>
               </mth-card>
 
-              <mth-grid data-columns="2" data-gap="4">
+              <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
                 <mth-card>
                   <mth-stack data-gap="3">
                     <h3>Station B-4 Isolation Manifold Topology</h3>
@@ -844,7 +866,7 @@ export const operationsView: AtmosViewModule = {
                     </mth-flex>
                   </mth-flex>
 
-                  <mth-grid data-columns="2" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
                     <mth-code-editor
                       name="edgeFirmwareTs"
                       label="AtmosEdge Shutoff Evaluator (TypeScript)"
@@ -884,15 +906,18 @@ export const operationsView: AtmosViewModule = {
                       actions.notify('Copied atmosctl calibration command to clipboard.', 'success')}
                   ></mth-code-block>
 
-                  <mth-diff-viewer
-                    label="Edge Firmware Configuration Diff (atmosedge v2.4.1 -> v2.5.0)"
-                    filename="atmosedge-config.json"
-                    view=${diffView}
-                    original=${CALIBRATION_DIFF_ORIGINAL}
-                    modified=${CALIBRATION_DIFF_MODIFIED}
-                    @mth-view-change=${(e: CustomEvent<{ view: 'unified' | 'split' }>) =>
-                      actions.updateViewUi('ops.diffView', e.detail.view)}
-                  ></mth-diff-viewer>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-diff-viewer
+                      style="display: block; min-inline-size: 38rem;"
+                      label="Edge Firmware Configuration Diff (atmosedge v2.4.1 -> v2.5.0)"
+                      filename="atmosedge-config.json"
+                      view=${diffView}
+                      original=${CALIBRATION_DIFF_ORIGINAL}
+                      modified=${CALIBRATION_DIFF_MODIFIED}
+                      @mth-view-change=${(e: CustomEvent<{ view: 'unified' | 'split' }>) =>
+                        actions.updateViewUi('ops.diffView', e.detail.view)}
+                    ></mth-diff-viewer>
+                  </div>
                 </mth-stack>
               </mth-card>
             </section>
@@ -939,7 +964,7 @@ export const operationsView: AtmosViewModule = {
                     }}
                   ></mth-rich-editor>
 
-                  <mth-grid data-columns="2" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
                     <mth-markdown-editor
                       name="sopMarkdownEditor"
                       label="SOP-402 Field Procedure Editor"
@@ -1043,7 +1068,7 @@ export const operationsView: AtmosViewModule = {
                     </mth-flex>
                   </mth-flex>
 
-                  <mth-grid data-columns="2" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
                     <mth-stack data-gap="3">
                       <mth-rrule-editor
                         name="overpassRecurrence"
@@ -1090,7 +1115,7 @@ export const operationsView: AtmosViewModule = {
                     </mth-stack>
                   </mth-grid>
 
-                  <mth-grid data-columns="3" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));">
                     <mth-date-picker
                       name="epaFilingDate"
                       label="EPA Subpart W Filing Cutoff"
@@ -1172,7 +1197,7 @@ export const operationsView: AtmosViewModule = {
                 <mth-stack data-gap="4">
                   <h2>7. Multi-Step Dispatch Wizard, JSON Schema Attestation & Conditional Forms</h2>
 
-                  <mth-grid data-columns="2" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
                     <mth-card>
                       <mth-stack data-gap="3">
                         <h3>Guided LDAR Crew Dispatch Wizard</h3>
@@ -1333,7 +1358,7 @@ export const operationsView: AtmosViewModule = {
                 <mth-stack data-gap="4">
                   <h2>8. Regulatory Evidence Vault, Immutable Audit Log, Settings & Auditor Sign-Off</h2>
 
-                  <mth-grid data-columns="2" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
                     <mth-stack data-gap="2">
                       <h3>OGMP 2.0 Filing & Calibration Certificate Explorer</h3>
                       <mth-file-explorer
@@ -1401,7 +1426,7 @@ export const operationsView: AtmosViewModule = {
                     </mth-stack>
                   </mth-settings-shell>
 
-                  <mth-grid data-columns="2" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
                     <mth-card>
                       <mth-stack data-gap="3">
                         <h3>OGI Thermal Evidence Ingestion</h3>

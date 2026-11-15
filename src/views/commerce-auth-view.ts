@@ -403,20 +403,24 @@ export const commerceAuthView: AtmosViewModule = {
             </mth-card>
 
             <mth-card>
-              <mth-checkout-steps
-                label="Procurement &amp; EPA Registry Settlement Flow"
-                orientation="horizontal"
-                active-step=${activeCheckoutStep}
-                .steps=${COMMERCE_CHECKOUT_STEPS}
-                @mth-step-change=${(e: CustomEvent<{ stepId: string }>) => {
-                  actions.updateViewUi('ca.checkoutStep', e.detail.stepId);
-                }}
-              ></mth-checkout-steps>
+              <div style="max-inline-size: 100%; overflow-x: auto;">
+                <mth-checkout-steps
+                  style="display: block; min-inline-size: 28rem;"
+                  label="Procurement &amp; EPA Registry Settlement Flow"
+                  orientation="horizontal"
+                  active-step=${activeCheckoutStep}
+                  .steps=${COMMERCE_CHECKOUT_STEPS}
+                  @mth-step-change=${(e: CustomEvent<{ stepId: string }>) => {
+                    actions.updateViewUi('ca.checkoutStep', e.detail.stepId);
+                  }}
+                ></mth-checkout-steps>
+              </div>
             </mth-card>
 
-            <mth-grid data-cols="2" data-gap="4">
-              <mth-card>
-                <mth-cart
+            <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));">
+              <mth-card style="min-width: 0;">
+                <div style="max-inline-size: 100%; overflow-x: auto;">
+                  <mth-cart
                   currency="USD"
                   locale=${state.locale}
                   .taxRate=${8.25}
@@ -452,12 +456,14 @@ export const commerceAuthView: AtmosViewModule = {
                     );
                   }}
                 ></mth-cart>
+                </div>
               </mth-card>
 
-              <mth-card>
+              <mth-card style="min-width: 0;">
                 <mth-stack data-gap="3">
                   <h4>Corporate Treasury Card Authorization</h4>
-                  <mth-payment-form
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-payment-form
                     name="treasury_payment"
                     .amount=${netSettlementTotal}
                     currency="USD"
@@ -474,26 +480,30 @@ export const commerceAuthView: AtmosViewModule = {
                       );
                     }}
                   ></mth-payment-form>
+                  </div>
                 </mth-stack>
               </mth-card>
             </mth-grid>
 
-            <mth-card>
-              <mth-invoice
-                invoice-number=${SAMPLE_SETTLEMENT_INVOICE.invoiceNumber}
-                issue-date=${SAMPLE_SETTLEMENT_INVOICE.issueDate}
-                due-date=${SAMPLE_SETTLEMENT_INVOICE.dueDate}
-                status=${SAMPLE_SETTLEMENT_INVOICE.status}
-                currency=${SAMPLE_SETTLEMENT_INVOICE.currency}
-                locale=${state.locale}
-                logo-url=${withBasePath('/media/orbital-spectrometer-poster.svg')}
-                .seller=${SAMPLE_SETTLEMENT_INVOICE.seller}
-                .buyer=${SAMPLE_SETTLEMENT_INVOICE.buyer}
-                .items=${SAMPLE_SETTLEMENT_INVOICE.items}
-                .taxRate=${SAMPLE_SETTLEMENT_INVOICE.taxRate}
-                .discountAmount=${SAMPLE_SETTLEMENT_INVOICE.discountAmount}
-                notes=${SAMPLE_SETTLEMENT_INVOICE.notes}
-              ></mth-invoice>
+            <mth-card style="min-width: 0;">
+              <div style="max-inline-size: 100%; overflow-x: auto;">
+                <mth-invoice
+                  style="display: block; min-inline-size: 32rem;"
+                  invoice-number=${SAMPLE_SETTLEMENT_INVOICE.invoiceNumber}
+                  issue-date=${SAMPLE_SETTLEMENT_INVOICE.issueDate}
+                  due-date=${SAMPLE_SETTLEMENT_INVOICE.dueDate}
+                  status=${SAMPLE_SETTLEMENT_INVOICE.status}
+                  currency=${SAMPLE_SETTLEMENT_INVOICE.currency}
+                  locale=${state.locale}
+                  logo-url=${withBasePath('/media/orbital-spectrometer-poster.svg')}
+                  .seller=${SAMPLE_SETTLEMENT_INVOICE.seller}
+                  .buyer=${SAMPLE_SETTLEMENT_INVOICE.buyer}
+                  .items=${SAMPLE_SETTLEMENT_INVOICE.items}
+                  .taxRate=${SAMPLE_SETTLEMENT_INVOICE.taxRate}
+                  .discountAmount=${SAMPLE_SETTLEMENT_INVOICE.discountAmount}
+                  notes=${SAMPLE_SETTLEMENT_INVOICE.notes}
+                ></mth-invoice>
+              </div>
             </mth-card>
           </mth-stack>
         </section>
@@ -505,8 +515,8 @@ export const commerceAuthView: AtmosViewModule = {
               3. Zero-Trust SCADA &amp; Regulator Identity Suite (<code>@methane-ui/auth</code>)
             </h3>
 
-            <mth-grid data-cols="2" data-gap="4">
-              <mth-card>
+            <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));">
+              <mth-card style="min-width: 0;">
                 <mth-stack data-gap="4">
                   <mth-flex data-justify="between" data-align="center" data-wrap="wrap" data-gap="2">
                     <h4>Operator Sign-In &amp; Federated SSO</h4>
@@ -553,8 +563,8 @@ export const commerceAuthView: AtmosViewModule = {
                 </mth-stack>
               </mth-card>
 
-              <mth-card>
-                <mth-stack data-gap="4">
+              <mth-card style="min-width: 0;">
+                <mth-stack data-gap="4" style="min-width: 0;">
                   <h4>FIDO2 Hardware Passkey &amp; FIPS TOTP Step-Up</h4>
 
                   <mth-passkey-prompt
@@ -572,37 +582,39 @@ export const commerceAuthView: AtmosViewModule = {
                     }}
                   ></mth-passkey-prompt>
 
-                  <mth-mfa-challenge
-                    name="scada_stepup_totp"
-                    mode=${mfaMode}
-                    .length=${6}
-                    value=${mfaCode}
-                    allow-resend
-                    @mth-change=${(e: CustomEvent<{ value: string }>) => {
-                      actions.updateViewUi('ca.mfaCode', e.detail.value);
-                    }}
-                    @mth-mode-change=${(e: CustomEvent<{ mode: string }>) => {
-                      actions.updateViewUi(
-                        'ca.mfaMode',
-                        e.detail.mode === 'backup' ? 'backup' : 'totp',
-                      );
-                    }}
-                    @mth-submit=${(e: CustomEvent<{ value: string; mode: string }>) => {
-                      actions.notify(
-                        `Step-up MFA (${e.detail.mode}) verified: ${e.detail.value}`,
-                        'success',
-                      );
-                    }}
-                    @mth-resend=${() => {
-                      actions.notify('Dispatched backup challenge to secondary device', 'info');
-                    }}
-                  ></mth-mfa-challenge>
+                  <div style="max-inline-size: 100%; overflow-x: auto;">
+                    <mth-mfa-challenge
+                      name="scada_stepup_totp"
+                      mode=${mfaMode}
+                      .length=${6}
+                      value=${mfaCode}
+                      allow-resend
+                      @mth-change=${(e: CustomEvent<{ value: string }>) => {
+                        actions.updateViewUi('ca.mfaCode', e.detail.value);
+                      }}
+                      @mth-mode-change=${(e: CustomEvent<{ mode: string }>) => {
+                        actions.updateViewUi(
+                          'ca.mfaMode',
+                          e.detail.mode === 'backup' ? 'backup' : 'totp',
+                        );
+                      }}
+                      @mth-submit=${(e: CustomEvent<{ value: string; mode: string }>) => {
+                        actions.notify(
+                          `Step-up MFA (${e.detail.mode}) verified: ${e.detail.value}`,
+                          'success',
+                        );
+                      }}
+                      @mth-resend=${() => {
+                        actions.notify('Dispatched backup challenge to secondary device', 'info');
+                      }}
+                    ></mth-mfa-challenge>
+                  </div>
                 </mth-stack>
               </mth-card>
             </mth-grid>
 
-            <mth-grid data-cols="2" data-gap="4">
-              <mth-card>
+            <mth-card style="min-width: 0;">
+              <div style="max-inline-size: 100%; overflow-x: auto;">
                 <mth-session-list
                   heading="Active Command Console &amp; Field Sessions"
                   .sessions=${sessions}
@@ -617,15 +629,18 @@ export const commerceAuthView: AtmosViewModule = {
                     actions.notify(`Revoked ${e.detail.count} remote field sessions`, 'warning');
                   }}
                 ></mth-session-list>
-              </mth-card>
+              </div>
+            </mth-card>
 
-              <mth-card>
-                <mth-stack data-gap="3">
-                  <mth-flex data-justify="between" data-align="center" data-wrap="wrap" data-gap="2">
-                    <h4>Safety-Critical RBAC Permission Matrix</h4>
-                    <mth-badge variant="info">2D Arrow-Key Grid</mth-badge>
-                  </mth-flex>
+            <mth-card style="min-width: 0;">
+              <mth-stack data-gap="3">
+                <mth-flex data-justify="between" data-align="center" data-wrap="wrap" data-gap="2">
+                  <h4>Safety-Critical RBAC Permission Matrix</h4>
+                  <mth-badge variant="info">2D Arrow-Key Grid</mth-badge>
+                </mth-flex>
+                <div style="max-inline-size: 100%; overflow-x: auto;">
                   <mth-role-matrix
+                    style="display: block; min-inline-size: 42rem;"
                     label="AtmosOps Multi-Agency Role Permissions Matrix"
                     .roles=${RBAC_ROLES}
                     .permissions=${RBAC_PERMISSIONS}
@@ -645,9 +660,9 @@ export const commerceAuthView: AtmosViewModule = {
                       );
                     }}
                   ></mth-role-matrix>
-                </mth-stack>
-              </mth-card>
-            </mth-grid>
+                </div>
+              </mth-stack>
+            </mth-card>
           </mth-stack>
         </section>
 
@@ -701,7 +716,7 @@ export const commerceAuthView: AtmosViewModule = {
                 }}
               >
                 <mth-stack data-gap="4">
-                  <mth-grid data-cols="3" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));">
                     <mth-input
                       name="facility_name"
                       value="Permian Compressor Station B-4"
@@ -735,12 +750,14 @@ export const commerceAuthView: AtmosViewModule = {
                       show-strength
                     ></mth-password-input>
 
-                    <mth-otp-input
-                      name="treasury_approval_pin"
-                      value="482910"
-                      .length=${6}
-                      label="Dual-Control Treasury PIN"
-                    ></mth-otp-input>
+                    <div style="max-inline-size: 100%; overflow-x: auto;">
+                      <mth-otp-input
+                        name="treasury_approval_pin"
+                        value="482910"
+                        .length=${6}
+                        label="Dual-Control Treasury PIN"
+                      ></mth-otp-input>
+                    </div>
 
                     <mth-number-input
                       name="sensor_node_count"
@@ -860,7 +877,7 @@ export const commerceAuthView: AtmosViewModule = {
                     label="Site Engineering &amp; HazLoc Deployment Instructions"
                   ></mth-textarea>
 
-                  <mth-grid data-cols="3" data-gap="4">
+                  <mth-grid data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));">
                     <mth-checkbox
                       name="auto_retire_credits"
                       value="enabled"

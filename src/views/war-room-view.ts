@@ -497,7 +497,7 @@ export const warRoomView: AtmosViewModule = {
           </div>
         </mth-banner>
 
-        <div class="mth-grid" data-columns="2" data-gap="4">
+        <div class="mth-grid" data-gap="4" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));">
           <mth-alert
             variant="success"
             title="SCADA Interlock & Gasket Seal Verified (0.3 kg/hr Residual)"
@@ -663,9 +663,9 @@ export const warRoomView: AtmosViewModule = {
         </mth-card>
 
         <!-- 3. Primary Two-Column War-Room Workspace -->
-        <div class="mth-grid" data-columns="2" data-gap="6">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: var(--mth-space-6, 1.5rem); align-items: start;">
           <!-- LEFT COLUMN: Multi-Agency Chat, Collab Cursors, Evidence Tabs & Media -->
-          <div class="mth-stack" data-gap="5">
+          <div class="mth-stack" data-gap="5" style="min-width: 0;">
             <mth-card variant="elevated">
               <div slot="header" class="mth-flex" data-justify="between" data-gap="2">
                 <div class="mth-flex" data-gap="2">
@@ -679,7 +679,7 @@ export const warRoomView: AtmosViewModule = {
 
               <div class="mth-stack" data-gap="4">
                 <!-- Search & Async Station Lookup -->
-                <div class="mth-grid" data-columns="2" data-gap="3">
+                <div class="mth-grid" data-gap="3" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));">
                   <mth-search-input
                     name="threadFilter"
                     label="Filter tactical log"
@@ -784,7 +784,7 @@ export const warRoomView: AtmosViewModule = {
                   </div>
                 </mth-message-composer>
 
-                <div class="mth-grid" data-columns="2" data-gap="3">
+                <div class="mth-grid" data-gap="3" style="--mth-grid-template: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));">
                   <mth-mention-input
                     name="responderMention"
                     label="Direct @Responder Escalation"
@@ -956,8 +956,8 @@ export const warRoomView: AtmosViewModule = {
             </mth-card>
           </div>
 
-          <!-- RIGHT COLUMN: AtmosAI Copilot, Sanitizer Firewall & WebRTC Bridge -->
-          <div class="mth-stack" data-gap="5">
+          <!-- RIGHT COLUMN: AtmosAI Copilot & WebRTC Bridge -->
+          <div class="mth-stack" data-gap="5" style="min-width: 0;">
             <!-- AtmosAI Plume Inversion Copilot -->
             <mth-card variant="elevated">
               <div slot="header" class="mth-flex" data-justify="between" data-gap="2">
@@ -1083,77 +1083,6 @@ export const warRoomView: AtmosViewModule = {
               </div>
             </mth-card>
 
-            <!-- @methane-ui/sanitize XSS & Prompt-Injection Red-Team Firewall -->
-            <mth-card variant="outlined" id="sanitizer-firewall">
-              <div slot="header" class="mth-flex" data-justify="between" data-gap="2">
-                <div class="mth-flex" data-gap="2">
-                  <mth-icon name="warning" size="sm"></mth-icon>
-                  <strong>@methane-ui/sanitize Red-Team XSS &amp; URL Firewall</strong>
-                </div>
-                <mth-badge variant=${urlIsSafe ? 'success' : 'danger'} size="sm" pill>
-                  isSafeUrl: ${urlIsSafe ? 'SAFE' : 'BLOCKED'}
-                </mth-badge>
-              </div>
-
-              <div class="mth-stack" data-gap="3">
-                <div class="mth-flex" data-gap="2">
-                  ${SANITIZER_REDTEAM_PAYLOADS.map(
-                    (payload) => html`
-                      <mth-button
-                        size="sm"
-                        variant=${payload.id === activePayload.id ? 'solid' : 'outline'}
-                        data-testid=${`payload-btn-${payload.id}`}
-                        @mth-press=${() => executeDomSanitizerAudit(payload.id)}
-                      >
-                        ${payload.label}
-                      </mth-button>
-                    `,
-                  )}
-                  <mth-button
-                    size="sm"
-                    variant="soft"
-                    data-testid="run-sanitizer-firewall"
-                    @mth-press=${() => executeDomSanitizerAudit(activePayload.id)}
-                  >
-                    Execute DOM Sanitizer Audit
-                  </mth-button>
-                </div>
-
-                <dl class="mth-dl">
-                  <dt>Untrusted URL Vector</dt>
-                  <dd>
-                    <code>${activePayload.rawUrl}</code> →
-                    <code>sanitizeUrl()</code> = <code>${sanitizedHref}</code>
-                  </dd>
-                  <dt>Universal <code>escapeHtml()</code> Output</dt>
-                  <dd><code>${escapedSourcePreview}</code></dd>
-                  <dt>Firewall Audit Result</dt>
-                  <dd data-testid="sanitizer-audit-output">${firewallAuditSummary}</dd>
-                </dl>
-
-                <div class="mth-grid" data-columns="2" data-gap="3">
-                  <div class="mth-stack" data-gap="1">
-                    <small><strong>safeSetMarkdown() / createStreamSanitizer()</strong></small>
-                    <div id="atmos-sanitize-markdown-box" data-testid="sanitize-markdown-box">
-                      Select a payload above to render sanitized Markdown nodes in-place.
-                    </div>
-                    <div id="atmos-sanitize-stream-box" data-testid="sanitize-stream-box">
-                      Streaming chunk target ready.
-                    </div>
-                  </div>
-                  <div class="mth-stack" data-gap="1">
-                    <small><strong>safeSetHTML() &amp; parseSafeFragment()</strong></small>
-                    <div id="atmos-sanitize-html-box" data-testid="sanitize-html-box">
-                      Strict DOMPurify / native setHTML sink ready (zero innerHTML).
-                    </div>
-                    <div id="atmos-sanitize-fragment-box" data-testid="sanitize-fragment-box">
-                      DocumentFragment sink ready.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </mth-card>
-
             <!-- WebRTC Multi-Agency Bridge & Zero-Autoplay Field Capture -->
             <mth-card variant="outlined">
               <div slot="header" class="mth-flex" data-justify="between" data-gap="2">
@@ -1166,6 +1095,7 @@ export const warRoomView: AtmosViewModule = {
 
               <div class="mth-stack" data-gap="4">
                 <mth-video-grid
+                  style="display: block; min-block-size: 16rem; max-inline-size: 100%;"
                   .participants=${WAR_ROOM_VIDEO_PARTICIPANTS}
                   .layout=${videoGridLayout}
                   .pinnedId=${pinnedParticipantId}
@@ -1185,7 +1115,7 @@ export const warRoomView: AtmosViewModule = {
 
                 <small>${rtcActivityStatus}</small>
 
-                <div class="mth-grid" data-columns="3" data-gap="3">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: var(--mth-space-3, 0.75rem);">
                   <mth-camera-capture
                     facing-mode="environment"
                     label="Flange Gasket Snapshot"
@@ -1227,6 +1157,100 @@ export const warRoomView: AtmosViewModule = {
             </mth-card>
           </div>
         </div>
+
+        <!-- @methane-ui/sanitize XSS & Prompt-Injection Red-Team Firewall (Full-Width Card) -->
+        <mth-card variant="outlined" id="sanitizer-firewall" style="min-width: 0;">
+          <div slot="header" class="mth-flex" data-justify="between" data-gap="2" data-wrap="wrap">
+            <div class="mth-flex" data-gap="2">
+              <mth-icon name="warning" size="sm"></mth-icon>
+              <strong>@methane-ui/sanitize Red-Team XSS &amp; URL Firewall</strong>
+            </div>
+            <mth-badge variant=${urlIsSafe ? 'success' : 'danger'} size="sm" pill>
+              isSafeUrl: ${urlIsSafe ? 'SAFE' : 'BLOCKED'}
+            </mth-badge>
+          </div>
+
+          <div class="mth-stack" data-gap="3" style="min-width: 0;">
+            <div class="mth-flex" data-gap="2" data-wrap="wrap">
+              ${SANITIZER_REDTEAM_PAYLOADS.map(
+                (payload) => html`
+                  <mth-button
+                    size="sm"
+                    variant=${payload.id === activePayload.id ? 'solid' : 'outline'}
+                    data-testid=${`payload-btn-${payload.id}`}
+                    @mth-press=${() => executeDomSanitizerAudit(payload.id)}
+                  >
+                    ${payload.label}
+                  </mth-button>
+                `,
+              )}
+              <mth-button
+                size="sm"
+                variant="soft"
+                data-testid="run-sanitizer-firewall"
+                @mth-press=${() => executeDomSanitizerAudit(activePayload.id)}
+              >
+                Execute DOM Sanitizer Audit
+              </mth-button>
+            </div>
+
+            <dl class="mth-dl" style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;">
+              <dt>Untrusted URL Vector</dt>
+              <dd style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;">
+                <code>${activePayload.rawUrl}</code> →
+                <code>sanitizeUrl()</code> = <code>${sanitizedHref}</code>
+              </dd>
+              <dt>Universal <code>escapeHtml()</code> Output</dt>
+              <dd style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;">
+                <code>${escapedSourcePreview}</code>
+              </dd>
+              <dt>Firewall Audit Result</dt>
+              <dd
+                data-testid="sanitizer-audit-output"
+                style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;"
+              >
+                ${firewallAuditSummary}
+              </dd>
+            </dl>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: var(--mth-space-3, 0.75rem); min-width: 0;">
+              <div class="mth-stack" data-gap="1" style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;">
+                <small><strong>safeSetMarkdown() / createStreamSanitizer()</strong></small>
+                <div
+                  id="atmos-sanitize-markdown-box"
+                  data-testid="sanitize-markdown-box"
+                  style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;"
+                >
+                  Select a payload above to render sanitized Markdown nodes in-place.
+                </div>
+                <div
+                  id="atmos-sanitize-stream-box"
+                  data-testid="sanitize-stream-box"
+                  style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;"
+                >
+                  Streaming chunk target ready.
+                </div>
+              </div>
+              <div class="mth-stack" data-gap="1" style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;">
+                <small><strong>safeSetHTML() &amp; parseSafeFragment()</strong></small>
+                <div
+                  id="atmos-sanitize-html-box"
+                  data-testid="sanitize-html-box"
+                  style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;"
+                >
+                  Strict DOMPurify / native setHTML sink ready (zero innerHTML).
+                </div>
+                <div
+                  id="atmos-sanitize-fragment-box"
+                  data-testid="sanitize-fragment-box"
+                  style="min-width: 0; overflow-wrap: anywhere; word-break: break-word;"
+                >
+                  DocumentFragment sink ready.
+                </div>
+              </div>
+            </div>
+          </div>
+        </mth-card>
 
         <!-- 4. Always-Mounted Subpart W Regulatory Countersign Modal (<mth-dialog>) -->
         <mth-dialog

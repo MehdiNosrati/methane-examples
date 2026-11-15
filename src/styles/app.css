@@ -12,11 +12,13 @@
   border-radius: var(--mth-radius-lg, 0.75rem);
   padding-block: var(--mth-space-4, 1rem);
   padding-inline: var(--mth-space-4, 1rem);
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
 
 .atmos-kpi-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
   gap: var(--mth-space-3, 0.75rem);
 }
 
@@ -38,12 +40,264 @@
   border-radius: var(--mth-radius-full, 9999px);
   background: var(--mth-color-bg-subtle, Canvas);
   border: 1px solid var(--mth-color-border, ButtonBorder);
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
 }
 
 .atmos-coverage-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.5rem), 1fr));
   gap: var(--mth-space-2, 0.5rem);
+}
+
+.atmos-coverage-grid > * {
+  min-inline-size: 0;
+}
+
+.atmos-coverage-grid mth-badge {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.atmos-coverage-grid code {
+  overflow-wrap: anywhere;
+}
+
+/* Ensure solid/accent buttons and FABs always have >= 4.5:1 contrast in dark & light modes */
+:is(mth-button, atmos-button):not([variant]),
+:is(mth-button, atmos-button)[variant='solid'],
+mth-fab,
+mth-speed-dial {
+  --mth-color-accent: oklch(from var(--mth-color-seed-brand) 0.46 min(c, 0.18) h);
+  --mth-color-accent-hover: oklch(from var(--mth-color-seed-brand) 0.40 min(c, 0.18) h);
+  --mth-color-accent-active: oklch(from var(--mth-color-seed-brand) 0.35 min(c, 0.16) h);
+  --mth-color-accent-fg: oklch(0.99 0 0);
+}
+
+.mth-btn:not(.mth-btn-soft, .mth-btn-outline, .mth-btn-outlined, .mth-btn-ghost, .mth-btn-danger) {
+  background-color: oklch(from var(--mth-color-seed-brand) 0.46 min(c, 0.18) h);
+  border-color: oklch(from var(--mth-color-seed-brand) 0.38 min(c, 0.18) h);
+  color: oklch(0.99 0 0);
+}
+
+.mth-btn:not(.mth-btn-soft, .mth-btn-outline, .mth-btn-outlined, .mth-btn-ghost, .mth-btn-danger):hover:not(:disabled) {
+  background-color: oklch(from var(--mth-color-seed-brand) 0.40 min(c, 0.18) h);
+}
+
+/* Navbar alignment & search sizing */
+.atmos-navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-2, 0.5rem);
+  flex-wrap: nowrap;
+  min-inline-size: 0;
+}
+
+.atmos-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--mth-space-2, 0.5rem);
+  flex-wrap: nowrap;
+  min-inline-size: 0;
+}
+
+.atmos-navbar-actions mth-site-search {
+  inline-size: clamp(10.5rem, 16vw, 15rem);
+  flex-shrink: 1;
+}
+
+/* Compact footer clock & collapsible utility panel */
+.atmos-footer-clock {
+  display: inline-flex;
+  align-items: center;
+  max-inline-size: 6.5rem;
+  font-family: var(--mth-font-mono, ui-monospace, monospace);
+  font-size: var(--mth-font-size-xs, 0.75rem);
+  color: var(--mth-color-fg-muted);
+}
+
+.atmos-footer-utilities {
+  border-block-start: 1px solid var(--mth-color-border, ButtonBorder);
+  padding-block-start: var(--mth-space-2, 0.5rem);
+  margin-block-start: var(--mth-space-2, 0.5rem);
+}
+
+.atmos-footer-utilities > summary {
+  cursor: pointer;
+  font-size: var(--mth-font-size-xs, 0.75rem);
+  font-weight: 600;
+  color: var(--mth-color-fg-muted);
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.atmos-footer-utilities > summary::before {
+  content: '▸';
+  display: inline-block;
+  transition: transform 120ms ease;
+}
+
+.atmos-footer-utilities[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.atmos-footer-utilities-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--mth-space-3, 0.75rem);
+  padding-block: var(--mth-space-3, 0.75rem);
+}
+
+/* Floating quick-action corner (FAB + Speed Dial) */
+.atmos-floating-actions {
+  position: fixed;
+  inset-block-end: 1.5rem;
+  inset-inline-end: 1.5rem;
+  z-index: var(--mth-z-index-sticky, 200);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mth-space-2, 0.5rem);
+}
+
+@media (min-width: 961px) {
+  .atmos-mobile-nav-toggle {
+    display: none;
+  }
+
+  mth-bottom-nav {
+    display: none !important;
+  }
+
+  mth-back-to-top {
+    inset-block-end: 5.5rem;
+    inset-inline-end: 1.5rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .atmos-navbar-nav {
+    flex-wrap: wrap;
+  }
+
+  .atmos-navbar-actions {
+    flex-wrap: wrap;
+    inline-size: 100%;
+    justify-content: flex-start;
+  }
+
+  .atmos-navbar-actions mth-site-search {
+    inline-size: min(100%, 18rem);
+    flex: 1 1 12rem;
+  }
+
+  mth-navbar::part(inner) {
+    flex-wrap: wrap;
+    padding-block: var(--mth-space-2, 0.5rem);
+    gap: var(--mth-space-2, 0.5rem);
+  }
+
+  mth-navbar::part(actions) {
+    inline-size: 100%;
+    margin-inline-start: 0;
+  }
+
+  .mth-app-shell-sidebar:not([data-mobile-open='true']) {
+    display: none;
+  }
+
+  .mth-app-shell-sidebar[data-mobile-open='true'] {
+    display: block;
+  }
+
+  .mth-app-shell-main {
+    padding-block-end: 5rem;
+  }
+
+  .mth-app-shell-footer {
+    padding-block-end: 5rem;
+  }
+
+  mth-bottom-nav {
+    display: block;
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: var(--mth-z-index-sticky, 200);
+    inline-size: 100%;
+    max-inline-size: 100vw;
+    overflow-x: clip;
+  }
+
+  mth-bottom-nav::part(item) {
+    padding-inline: 0.25rem;
+    font-size: 0.72rem;
+    gap: 0.2rem;
+    white-space: nowrap;
+  }
+
+  .atmos-floating-actions {
+    inset-block-end: 4.75rem;
+    inset-inline-start: 0.75rem;
+    inset-inline-end: auto;
+  }
+
+  mth-back-to-top {
+    inset-block-end: 4.75rem;
+    inset-inline-end: 0.75rem;
+  }
+}
+
+/* Overview & Studio responsive guards */
+.mth-app-shell-footer .mth-app-shell-aside {
+  grid-area: auto;
+  position: static;
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.atmos-briefing-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--mth-space-6, 1.5rem);
+  align-items: start;
+}
+
+.atmos-briefing-split > * {
+  min-inline-size: 0;
+}
+
+@media (min-width: 64rem) {
+  .atmos-briefing-split {
+    grid-template-columns: minmax(16rem, 20rem) minmax(0, 1fr);
+  }
+
+  .atmos-briefing-split > .mth-sticky {
+    position: sticky;
+    inset-block-start: 4.5rem;
+  }
+}
+
+@media (max-width: 63.999rem) {
+  .atmos-briefing-split > .mth-sticky {
+    position: static;
+  }
+}
+
+.atmos-table-scroll {
+  overflow-x: auto;
+  max-inline-size: 100%;
+}
+
+mth-color-picker,
+mth-slider,
+mth-range-slider,
+mth-segmented-control,
+mth-code-tabs {
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
 
 /* Public Shadow DOM styling tiers: ::part() and :state() */

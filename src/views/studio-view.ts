@@ -238,7 +238,7 @@ export const studioView: AtmosViewModule = {
               <mth-badge variant="accent">Core v${CORE_VERSION}</mth-badge>
             </div>
 
-            <mth-grid style="--mth-grid-min:15rem">
+            <mth-grid style="--mth-grid-min:min(100%, 15rem)">
               <mth-segmented-control
                 name="themeMode"
                 label="Color Scheme (data-mth-theme)"
@@ -273,7 +273,7 @@ export const studioView: AtmosViewModule = {
               ></mth-segmented-control>
             </mth-grid>
 
-            <div class="mth-grid" style="--mth-grid-min:15rem">
+            <div class="mth-grid" style="--mth-grid-min:min(100%, 15rem)">
               <mth-color-picker
                 name="accentHex"
                 label="Accent Swatch Reference"
@@ -529,7 +529,7 @@ export const studioView: AtmosViewModule = {
               </div>
               <input
                 class="mth-input"
-                style="max-inline-size:16rem"
+                style="inline-size:100%;max-inline-size:16rem"
                 placeholder="Filter 256 tags or packages..."
                 .value=${coverageFilter}
                 @input=${(ev: Event) =>

@@ -375,6 +375,11 @@ export const telemetryView: AtmosViewModule = {
       quickFilterText,
     );
 
+    const pivotSensorRows = filteredSensorRows.map((row) => ({
+      ...row,
+      fluxKgHr: Math.round(row.fluxKgHr),
+    }));
+
     const visibleDatagridColumns: ReadonlyArray<DatagridColumn> = columnChooserItems
       .filter((item) => item.visible)
       .map((item) => ALL_AVAILABLE_DATAGRID_COLUMNS.find((col) => col.id === item.id))
@@ -895,13 +900,41 @@ export const telemetryView: AtmosViewModule = {
               }}
             ></mth-bulk-action-bar>
 
-            <!-- Main Grid + Column Chooser Side-by-Side -->
-            <div
-              class="mth-grid"
-              style="grid-template-columns:minmax(0,3fr) minmax(15rem,1fr);gap:1rem;align-items:start"
-            >
-              <mth-stack data-gap="3">
+            <!-- Collapsible Column Chooser + Full-Width Datagrid -->
+            <mth-stack data-gap="3">
+              <details
+                class="atmos-surface-card"
+                style="padding:0.65rem 0.9rem"
+              >
+                <summary
+                  style="cursor:pointer;font-weight:600;font-size:0.875rem;user-select:none"
+                >
+                  Configure Datagrid Columns (${visibleDatagridColumns.length} visible)
+                </summary>
+                <div style="margin-block-start:0.75rem">
+                  <mth-column-chooser
+                    allow-reorder
+                    allow-reset
+                    .columns=${columnChooserItems}
+                    @mth-change=${(ev: CustomEvent<{
+                      columns: ReadonlyArray<ColumnChooserItem>;
+                    }>) => {
+                      actions.updateViewUi('telemetryColumnChooser', [...ev.detail.columns]);
+                    }}
+                    @mth-reset=${() => {
+                      actions.updateViewUi(
+                        'telemetryColumnChooser',
+                        TELEMETRY_COLUMN_CHOOSER_ITEMS,
+                      );
+                      actions.notify('Restored default telemetry columns', 'info');
+                    }}
+                  ></mth-column-chooser>
+                </div>
+              </details>
+
+              <div style="inline-size:100%;max-inline-size:100%;overflow-x:auto">
                 <mth-datagrid
+                  style="display:block;inline-size:100%;min-inline-size:52rem"
                   label="Global TDLAS and SWIR sensor telemetry datagrid"
                   selectable
                   multi-sort
@@ -937,46 +970,28 @@ export const telemetryView: AtmosViewModule = {
                     );
                   }}
                 ></mth-datagrid>
+              </div>
 
-                <mth-flex
-                  data-gap="3"
-                  style="justify-content:space-between;align-items:center;flex-wrap:wrap"
-                >
-                  <span style="font-size:0.8rem;color:var(--mth-color-fg-muted)">
-                    Page ${clampedPage} of ${totalPages} (${filteredSensorRows.length} total sensors)
-                  </span>
-                  <mth-pagination
-                    page=${clampedPage}
-                    total-pages=${totalPages}
-                    sibling-count="1"
-                    boundary-count="1"
-                    label="Sensor grid page navigation"
-                    @mth-change=${(ev: CustomEvent<{ page: number }>) => {
-                      actions.updateViewUi('telemetryCurrentPage', ev.detail.page);
-                      actions.announce(`Navigated to sensor page ${ev.detail.page}`);
-                    }}
-                  ></mth-pagination>
-                </mth-flex>
-              </mth-stack>
-
-              <mth-column-chooser
-                allow-reorder
-                allow-reset
-                .columns=${columnChooserItems}
-                @mth-change=${(ev: CustomEvent<{
-                  columns: ReadonlyArray<ColumnChooserItem>;
-                }>) => {
-                  actions.updateViewUi('telemetryColumnChooser', [...ev.detail.columns]);
-                }}
-                @mth-reset=${() => {
-                  actions.updateViewUi(
-                    'telemetryColumnChooser',
-                    TELEMETRY_COLUMN_CHOOSER_ITEMS,
-                  );
-                  actions.notify('Restored default telemetry columns', 'info');
-                }}
-              ></mth-column-chooser>
-            </div>
+              <mth-flex
+                data-gap="3"
+                style="justify-content:space-between;align-items:center;flex-wrap:wrap"
+              >
+                <span style="font-size:0.8rem;color:var(--mth-color-fg-muted)">
+                  Page ${clampedPage} of ${totalPages} (${filteredSensorRows.length} total sensors)
+                </span>
+                <mth-pagination
+                  page=${clampedPage}
+                  total-pages=${totalPages}
+                  sibling-count="1"
+                  boundary-count="1"
+                  label="Sensor grid page navigation"
+                  @mth-change=${(ev: CustomEvent<{ page: number }>) => {
+                    actions.updateViewUi('telemetryCurrentPage', ev.detail.page);
+                    actions.announce(`Navigated to sensor page ${ev.detail.page}`);
+                  }}
+                ></mth-pagination>
+              </mth-flex>
+            </mth-stack>
 
             <!-- Filter Builder + Nested Boolean Query Builder -->
             <div
@@ -1011,11 +1026,8 @@ export const telemetryView: AtmosViewModule = {
         </section>
 
         <!-- 4. Multi-Dimensional Pivot Matrix & Constellation Hierarchical Tree Rollup -->
-        <div
-          class="mth-grid"
-          style="grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:1rem"
-        >
-          <div class="atmos-surface-card">
+        <mth-stack data-gap="4">
+          <div class="atmos-surface-card" style="min-inline-size:0">
             <mth-stack data-gap="3">
               <div class="atmos-section-header">
                 <strong>Basin × Asset Class CH₄ Flux Pivot (kg/hr)</strong>
@@ -1040,51 +1052,57 @@ export const telemetryView: AtmosViewModule = {
                 </mth-flex>
               </div>
 
-              <mth-pivot-table
-                label="Basin by asset class CH4 flux pivot table"
-                aggregator=${pivotAggregator}
-                show-totals
-                .rows=${filteredSensorRows}
-                .rowDimensions=${['basin']}
-                .columnDimensions=${['facilityType']}
-                .valueFields=${['fluxKgHr']}
-                @mth-group-toggle=${(ev: CustomEvent<{
-                  groupKey: string;
-                  expanded: boolean;
-                }>) => {
-                  actions.announce(
-                    `${ev.detail.expanded ? 'Expanded' : 'Collapsed'} basin group ${ev.detail.groupKey}`,
-                  );
-                }}
-              ></mth-pivot-table>
+              <div style="inline-size:100%;max-inline-size:100%;overflow-x:auto">
+                <mth-pivot-table
+                  style="display:block;inline-size:100%;min-inline-size:44rem"
+                  label="Basin by asset class CH4 flux pivot table"
+                  aggregator=${pivotAggregator}
+                  show-totals
+                  .rows=${pivotSensorRows}
+                  .rowDimensions=${['basin']}
+                  .columnDimensions=${['facilityType']}
+                  .valueFields=${['fluxKgHr']}
+                  @mth-group-toggle=${(ev: CustomEvent<{
+                    groupKey: string;
+                    expanded: boolean;
+                  }>) => {
+                    actions.announce(
+                      `${ev.detail.expanded ? 'Expanded' : 'Collapsed'} basin group ${ev.detail.groupKey}`,
+                    );
+                  }}
+                ></mth-pivot-table>
+              </div>
             </mth-stack>
           </div>
 
-          <div class="atmos-surface-card">
+          <div class="atmos-surface-card" style="min-inline-size:0">
             <mth-stack data-gap="3">
               <div class="atmos-section-header">
                 <strong>Constellation → Basin → Pad Hierarchy Rollup</strong>
                 <span class="atmos-mono-pill">OGMP 2.0 SITE ROLLUP</span>
               </div>
 
-              <mth-tree-table
-                label="Constellation hierarchy emission rollup"
-                selectable
-                row-height="38"
-                .columns=${FACILITY_TREE_COLUMNS}
-                .rows=${FACILITY_TREE_ROWS}
-                .expandedIds=${expandedTreeIds}
-                @mth-expand-change=${(ev: CustomEvent<{
-                  expandedIds: ReadonlyArray<string>;
-                }>) => {
-                  actions.updateViewUi('telemetryExpandedTreeIds', [
-                    ...ev.detail.expandedIds,
-                  ]);
-                }}
-              ></mth-tree-table>
+              <div style="inline-size:100%;max-inline-size:100%;overflow-x:auto">
+                <mth-tree-table
+                  style="display:block;inline-size:100%;min-inline-size:40rem"
+                  label="Constellation hierarchy emission rollup"
+                  selectable
+                  row-height="38"
+                  .columns=${FACILITY_TREE_COLUMNS}
+                  .rows=${FACILITY_TREE_ROWS}
+                  .expandedIds=${expandedTreeIds}
+                  @mth-expand-change=${(ev: CustomEvent<{
+                    expandedIds: ReadonlyArray<string>;
+                  }>) => {
+                    actions.updateViewUi('telemetryExpandedTreeIds', [
+                      ...ev.detail.expandedIds,
+                    ]);
+                  }}
+                ></mth-tree-table>
+              </div>
             </mth-stack>
           </div>
-        </div>
+        </mth-stack>
 
         <!-- 5. EPA Subpart W / OGMP 2.0 Emission-Factor Workbook (mth-formula-bar + mth-spreadsheet) -->
         <section
@@ -1202,39 +1220,42 @@ export const telemetryView: AtmosViewModule = {
               }}
             ></mth-formula-bar>
 
-            <mth-spreadsheet
-              label="EPA Subpart W and OGMP 2.0 emission inventory worksheet"
-              rows="10"
-              cols="5"
-              row-height="34"
-              address-mode=${addressMode}
-              active-cell=${activeCell}
-              .cells=${spreadsheetCells}
-              @mth-cell-select=${(ev: CustomEvent<{
-                address: string;
-                raw: string;
-              }>) => {
-                actions.updateViewUi('telemetryActiveCell', ev.detail.address);
-                actions.updateViewUi('telemetryFormulaDraft', ev.detail.raw);
-              }}
-              @mth-cell-change=${(ev: CustomEvent<{
-                address: string;
-                raw: string;
-                value: unknown;
-              }>) => {
-                const updatedCells = {
-                  ...spreadsheetCells,
-                  [ev.detail.address]: ev.detail.raw,
-                };
-                actions.updateViewUi('telemetrySpreadsheetCells', updatedCells);
-                actions.updateViewUi('telemetryActiveCell', ev.detail.address);
-                actions.updateViewUi('telemetryFormulaDraft', ev.detail.raw);
-                actions.notify(
-                  `Updated cell ${ev.detail.address} → ${String(ev.detail.value)}`,
-                  'success',
-                );
-              }}
-            ></mth-spreadsheet>
+            <div style="inline-size:100%;max-inline-size:100%;overflow-x:auto">
+              <mth-spreadsheet
+                style="display:block;inline-size:100%;min-inline-size:40rem"
+                label="EPA Subpart W and OGMP 2.0 emission inventory worksheet"
+                rows="10"
+                cols="5"
+                row-height="34"
+                address-mode=${addressMode}
+                active-cell=${activeCell}
+                .cells=${spreadsheetCells}
+                @mth-cell-select=${(ev: CustomEvent<{
+                  address: string;
+                  raw: string;
+                }>) => {
+                  actions.updateViewUi('telemetryActiveCell', ev.detail.address);
+                  actions.updateViewUi('telemetryFormulaDraft', ev.detail.raw);
+                }}
+                @mth-cell-change=${(ev: CustomEvent<{
+                  address: string;
+                  raw: string;
+                  value: unknown;
+                }>) => {
+                  const updatedCells = {
+                    ...spreadsheetCells,
+                    [ev.detail.address]: ev.detail.raw,
+                  };
+                  actions.updateViewUi('telemetrySpreadsheetCells', updatedCells);
+                  actions.updateViewUi('telemetryActiveCell', ev.detail.address);
+                  actions.updateViewUi('telemetryFormulaDraft', ev.detail.raw);
+                  actions.notify(
+                    `Updated cell ${ev.detail.address} → ${String(ev.detail.value)}`,
+                    'success',
+                  );
+                }}
+              ></mth-spreadsheet>
+            </div>
           </mth-stack>
         </section>
 
@@ -1243,48 +1264,51 @@ export const telemetryView: AtmosViewModule = {
           class="mth-grid"
           style="grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr));gap:1rem"
         >
-          <div class="atmos-surface-card">
+          <div class="atmos-surface-card" style="min-inline-size:0">
             <mth-stack data-gap="3">
               <div class="atmos-section-header">
                 <strong>Basin OGMP 2.0 Verification Summary</strong>
                 <mth-badge variant="success" pill>5 Monitored Basins</mth-badge>
               </div>
 
-              <mth-table
-                caption="Global Monitored Basins & OGMP 2.0 Verification Summary"
-                selectable="multiple"
-                striped
-                sticky-header
-                .columns=${TELEMETRY_SUMMARY_TABLE_COLUMNS}
-                .rows=${TELEMETRY_SUMMARY_TABLE_ROWS}
-                .selectedIds=${selectedSummaryBasinIds}
-                @mth-selection-change=${(ev: CustomEvent<{
-                  selectedIds: ReadonlyArray<string>;
-                }>) => {
-                  actions.updateViewUi('telemetrySelectedBasinIds', [
-                    ...ev.detail.selectedIds,
-                  ]);
-                }}
-              >
-                <mth-column field="basin" header="Monitored Basin" sortable></mth-column>
-                <mth-column
-                  field="activeSensors"
-                  header="TDLAS Nodes"
-                  sortable
-                  align="end"
-                ></mth-column>
-                <mth-column
-                  field="meanFlux"
-                  header="Mean Flux (kg/hr)"
-                  sortable
-                  align="end"
-                ></mth-column>
-                <mth-column
-                  field="ogmpLevel"
-                  header="OGMP 2.0 Tier"
-                  sortable
-                ></mth-column>
-              </mth-table>
+              <div style="inline-size:100%;max-inline-size:100%;overflow-x:auto">
+                <mth-table
+                  style="display:block;inline-size:100%;min-inline-size:34rem"
+                  caption="Global Monitored Basins & OGMP 2.0 Verification Summary"
+                  selectable="multiple"
+                  striped
+                  sticky-header
+                  .columns=${TELEMETRY_SUMMARY_TABLE_COLUMNS}
+                  .rows=${TELEMETRY_SUMMARY_TABLE_ROWS}
+                  .selectedIds=${selectedSummaryBasinIds}
+                  @mth-selection-change=${(ev: CustomEvent<{
+                    selectedIds: ReadonlyArray<string>;
+                  }>) => {
+                    actions.updateViewUi('telemetrySelectedBasinIds', [
+                      ...ev.detail.selectedIds,
+                    ]);
+                  }}
+                >
+                  <mth-column field="basin" header="Monitored Basin" sortable></mth-column>
+                  <mth-column
+                    field="activeSensors"
+                    header="TDLAS Nodes"
+                    sortable
+                    align="end"
+                  ></mth-column>
+                  <mth-column
+                    field="meanFlux"
+                    header="Mean Flux (kg/hr)"
+                    sortable
+                    align="end"
+                  ></mth-column>
+                  <mth-column
+                    field="ogmpLevel"
+                    header="OGMP 2.0 Tier"
+                    sortable
+                  ></mth-column>
+                </mth-table>
+              </div>
             </mth-stack>
           </div>
 

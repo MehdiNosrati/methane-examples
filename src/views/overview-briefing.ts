@@ -238,8 +238,8 @@ export const overviewBriefingView: AtmosViewModule = {
         </div>
 
         <!-- Sidebar Layout + Article Layout + Prose + Definition List + Sticky Quick Filter -->
-        <div class="mth-sidebar-layout">
-          <aside class="mth-sticky atmos-surface-card" style="inset-block-start:4.5rem;align-self:start">
+        <div class="mth-sidebar-layout atmos-briefing-split">
+          <aside class="mth-sticky atmos-surface-card" style="align-self:start">
             <div class="mth-container" style="padding-inline:0">
               <form
                 @submit=${(ev: Event) => {
@@ -311,10 +311,12 @@ export const overviewBriefingView: AtmosViewModule = {
         <section class="atmos-surface-card">
           <mth-stack data-gap="4">
             <h2 style="margin:0">Detection Modality Comparison</h2>
-            <mth-comparison-table
-              .plans=${BRIEFING_COMPARISON_PLANS}
-              .rows=${BRIEFING_COMPARISON_ROWS}
-            ></mth-comparison-table>
+            <div class="atmos-table-scroll">
+              <mth-comparison-table
+                .plans=${BRIEFING_COMPARISON_PLANS}
+                .rows=${BRIEFING_COMPARISON_ROWS}
+              ></mth-comparison-table>
+            </div>
 
             <div class="mth-pricing-table">
               <div class="mth-pricing-tier">
@@ -368,7 +370,7 @@ export const overviewBriefingView: AtmosViewModule = {
               Receive basin-level XCH₄ anomalies and EPA Subpart W regulatory digests.
             </p>
           </div>
-          <div class="mth-cta-actions" style="min-inline-size:18rem">
+          <div class="mth-cta-actions" style="min-inline-size:min(100%, 18rem);flex:1 1 16rem">
             <mth-newsletter-form
               name="bulletinEmail"
               @mth-submit=${() => actions.notify('Subscribed to AtmosOps Weekly Orbital Bulletin!', 'success')}

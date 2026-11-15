@@ -468,7 +468,7 @@ export const spatialView: AtmosViewModule = {
               </mth-flex>
             </div>
 
-            <mth-grid data-columns="2" data-gap="4">
+            <mth-grid data-gap="4" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr))">
               <mth-cascader
                 name="basinAssetPath"
                 separator="/"
@@ -567,6 +567,7 @@ export const spatialView: AtmosViewModule = {
                 >
                   <mth-stack data-gap="3">
                     <mth-map
+                      style="display:block;min-block-size:22rem;block-size:24rem;border-radius:var(--mth-radius-md,0.5rem);overflow:hidden;border:1px solid var(--mth-color-border,ButtonBorder);background:var(--mth-color-surface-elevated,#0f172a)"
                       .mapStyle=${OFFLINE_BASIN_MAP_STYLE}
                       .markers=${PLUME_MAP_MARKERS}
                       center-lat=${mapCenterLat}
@@ -769,7 +770,7 @@ export const spatialView: AtmosViewModule = {
               </span>
             </div>
 
-            <mth-grid data-columns="2" data-gap="4">
+            <mth-stack data-gap="4">
               <mth-card variant="outlined">
                 <span slot="header">
                   <strong>Permian Compressor Station B-4 · Indoor TDLAS Laser Zones</strong>
@@ -802,41 +803,45 @@ export const spatialView: AtmosViewModule = {
                   <strong>Houston Orbital Command · Shift Console Assignments</strong>
                 </span>
                 <mth-stack data-gap="3">
-                  <mth-seat-map
-                    name="shiftConsoles"
-                    .value=${selectedSeatsValue}
-                    .seats=${MISSION_CONTROL_SEATS}
-                    columns="4"
-                    multiple
-                    label="Houston Mission Control Shift Desk Assignments"
-                    @mth-seat-select=${(
-                      event: CustomEvent<{
-                        selectedIds: ReadonlyArray<string>;
-                        seat: { id: string; label?: string };
-                      }>,
-                    ) => {
-                      const csv = event.detail.selectedIds.join(',');
-                      actions.updateViewUi('spatial.selectedSeats', csv);
-                      actions.notify(
-                        `Shift console assignment updated: ${event.detail.seat.label ?? event.detail.seat.id}`,
-                        'success',
-                      );
-                    }}
-                  ></mth-seat-map>
+                  <div style="inline-size:100%;max-inline-size:100%;overflow-x:auto">
+                    <mth-seat-map
+                      style="display:block;inline-size:100%;min-inline-size:36rem"
+                      name="shiftConsoles"
+                      .value=${selectedSeatsValue}
+                      .seats=${MISSION_CONTROL_SEATS}
+                      columns="4"
+                      multiple
+                      label="Houston Mission Control Shift Desk Assignments"
+                      @mth-seat-select=${(
+                        event: CustomEvent<{
+                          selectedIds: ReadonlyArray<string>;
+                          seat: { id: string; label?: string };
+                        }>,
+                      ) => {
+                        const csv = event.detail.selectedIds.join(',');
+                        actions.updateViewUi('spatial.selectedSeats', csv);
+                        actions.notify(
+                          `Shift console assignment updated: ${event.detail.seat.label ?? event.detail.seat.id}`,
+                          'success',
+                        );
+                      }}
+                    ></mth-seat-map>
+                  </div>
                   <span class="atmos-mono-pill">
                     Assigned Operator Consoles: ${selectedSeatsValue || 'Unassigned'}
                   </span>
                 </mth-stack>
               </mth-card>
-            </mth-grid>
+            </mth-stack>
 
-            <mth-grid data-columns="2" data-gap="4">
+            <mth-grid data-gap="4" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr))">
               <mth-card variant="outlined">
                 <span slot="header">
                   <strong>AtmosSat-4 Nadir SWIR Spectrometer · 3D Hardware Twin</strong>
                 </span>
                 <mth-stack data-gap="3">
                   <mth-model-viewer
+                    style="background:var(--mth-color-surface-elevated,#0f172a);--mth-color-bg-subtle:#0f172a;--mth-color-surface:#0f172a;border-radius:var(--mth-radius-md);min-block-size:22rem"
                     src=${withBasePath('/media/orbital-spectrometer.gltf')}
                     poster=${withBasePath('/media/orbital-spectrometer-poster.svg')}
                     alt="AtmosSat-4 Nadir SWIR Imaging Spectrometer 3D Hardware Twin"
@@ -937,7 +942,7 @@ export const spatialView: AtmosViewModule = {
               </span>
             </div>
 
-            <mth-grid data-columns="2" data-gap="4">
+            <mth-grid data-gap="4" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr))">
               <mth-card variant="outlined">
                 <span slot="header">
                   <strong>Co-Registered Optical RGB vs. SWIR 1650 nm Plume Scrubber</strong>
@@ -999,7 +1004,7 @@ export const spatialView: AtmosViewModule = {
               </mth-card>
             </mth-grid>
 
-            <mth-grid data-columns="2" data-gap="4">
+            <mth-grid data-gap="4" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr))">
               <mth-card variant="outlined">
                 <span slot="header">
                   <strong>Multi-Sensor Pass Carousel &amp; Thumbnail Gallery</strong>
@@ -1050,7 +1055,7 @@ export const spatialView: AtmosViewModule = {
               </mth-stack>
             </mth-grid>
 
-            <mth-grid data-columns="2" data-gap="4">
+            <mth-grid data-gap="4" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr))">
               <mth-card variant="outlined">
                 <span slot="header">
                   <strong>Thermal Plume Region-of-Interest (ROI) Cropper</strong>
@@ -1123,7 +1128,7 @@ export const spatialView: AtmosViewModule = {
 
             <div class="mth-divider">Wellhead Geolocation Pin &amp; EPA Subpart W Dispatch Address</div>
 
-            <mth-grid data-columns="2" data-gap="4">
+            <mth-grid data-gap="4" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,24rem),1fr))">
               <mth-card variant="outlined">
                 <span slot="header">
                   <strong>Wellhead &amp; Mobile Meteorological Mast Coordinate Selector</strong>
@@ -1303,7 +1308,7 @@ export const spatialView: AtmosViewModule = {
               Wall-display projection mode synchronizing Permian Delaware &amp; Midland SWIR plume
               vectors, downwind safety perimeters, and live responder telemetry.
             </p>
-            <mth-grid data-columns="3" data-gap="3">
+            <mth-grid data-gap="3" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr))">
               <div class="atmos-surface-card">
                 <strong>Primary Source</strong>
                 <p>${activePlume.label}</p>

@@ -105,6 +105,7 @@ export function renderAppShell(
   const activeLocaleMeta =
     SUPPORTED_ATMOS_LOCALES.find((item) => item.code === state.locale) ??
     SUPPORTED_ATMOS_LOCALES[0]!;
+  const mobileSidebarOpen = Boolean(state.ui['mobileSidebarOpen']);
 
   const breadcrumbPathItems = [
     { label: 'AtmosOps Global', href: overviewHref },
@@ -114,6 +115,9 @@ export function renderAppShell(
 
   const onNavSelect = (ev: Event) => {
     const detail = (ev as CustomEvent<{ value?: string; href?: string }>).detail;
+    if (mobileSidebarOpen) {
+      actions.updateViewUi('mobileSidebarOpen', false);
+    }
     if (detail?.href) {
       actions.navigate(resolveRouteFromPathname(detail.href));
     } else if (detail?.value) {
@@ -158,7 +162,7 @@ export function renderAppShell(
             🛰️ AtmosOps <mth-badge variant="accent" pill>CH₄ v0.1.1</mth-badge>
           </a>
 
-          <mth-flex data-gap="2" data-align="center" style="flex-wrap:wrap">
+          <div class="atmos-navbar-nav">
             <mth-menubar
               label="Mission Systems Menu"
               .items=${navData.menubarItems}
@@ -169,9 +173,19 @@ export function renderAppShell(
               .sections=${navData.megaMenuSections}
             ></mth-mega-menu>
             <mth-spacer></mth-spacer>
-          </mth-flex>
+          </div>
 
-          <mth-flex slot="actions" data-gap="2" data-align="center" style="flex-wrap:wrap">
+          <div slot="actions" class="atmos-navbar-actions">
+            <button
+              type="button"
+              class="mth-btn mth-btn-outline atmos-mobile-nav-toggle"
+              aria-expanded=${mobileSidebarOpen ? 'true' : 'false'}
+              aria-controls="atmos-sidebar"
+              @click=${() => actions.updateViewUi('mobileSidebarOpen', !mobileSidebarOpen)}
+            >
+              ${mobileSidebarOpen ? '✕ Close' : '☰ Workspaces'}
+            </button>
+
             <mth-site-search
               label="Search stations, plumes, SOPs"
               placeholder="Search Pad B-4, OGMP, TDLAS... (/)"
@@ -236,13 +250,17 @@ export function renderAppShell(
               ⌘K Palette
             </mth-button>
 
-            <mth-clock timezone="UTC" format="24h" show-seconds></mth-clock>
             <mth-network-status></mth-network-status>
-          </mth-flex>
+          </div>
         </mth-navbar>
       </header>
 
-      <aside class="mth-app-shell-sidebar" aria-label="Mission workspaces">
+      <aside
+        id="atmos-sidebar"
+        class="mth-app-shell-sidebar"
+        aria-label="Mission workspaces"
+        data-mobile-open=${mobileSidebarOpen ? 'true' : 'false'}
+      >
         <mth-stack data-gap="4" style="padding-block:1rem;padding-inline:0.75rem">
           <mth-sidebar-nav
             label="AtmosOps Workspaces"
@@ -273,20 +291,12 @@ export function renderAppShell(
       <main id="atmos-main" class="mth-app-shell-main" tabindex="-1">
         <mth-container style="padding-block:1.25rem">
           <mth-stack data-gap="4">
-            <mth-flex data-gap="3" data-align="center" data-justify="between" style="flex-wrap:wrap">
-              <mth-breadcrumbs label="Workspace trail">
-                <mth-breadcrumb-item href=${overviewHref}>AtmosOps</mth-breadcrumb-item>
-                <mth-breadcrumb-item href=${activeRouteHref} current>
-                  ${activeView.title}
-                </mth-breadcrumb-item>
-              </mth-breadcrumbs>
-
-              <mth-breadcrumb-path
-                label="Sector telemetry path"
-                .items=${breadcrumbPathItems}
-                max-items="3"
-              ></mth-breadcrumb-path>
-            </mth-flex>
+            <mth-breadcrumbs label="Workspace trail">
+              <mth-breadcrumb-item href=${overviewHref}>AtmosOps</mth-breadcrumb-item>
+              <mth-breadcrumb-item href=${activeRouteHref} current>
+                ${activeView.title}
+              </mth-breadcrumb-item>
+            </mth-breadcrumbs>
 
             <div class="atmos-section-header">
               <div>
@@ -295,34 +305,7 @@ export function renderAppShell(
                   ${activeView.subtitle}
                 </p>
               </div>
-              <mth-flex data-gap="2" data-align="center">
-                <mth-badge variant="accent">${activeView.ownedTags.length} Primary Tags</mth-badge>
-                <mth-fab
-                  label="Emit Telemetry Test Alert"
-                  size="sm"
-                  @mth-press=${() =>
-                    actions.notify(
-                      `Telemetry ping confirmed on ${activeView.title} (${new Date().toISOString().slice(11, 19)}Z)`,
-                      'success',
-                    )}
-                >
-                  + Ping
-                </mth-fab>
-                <mth-speed-dial
-                  label="Quick Mission Actions"
-                  direction="down"
-                  size="sm"
-                  .actions=${SPEED_DIAL_ACTIONS}
-                  @mth-action=${(ev: Event) => {
-                    const val = (ev as CustomEvent<{ value?: string }>).detail?.value;
-                    if (val === 'palette') actions.updateState({ commandPaletteOpen: true });
-                    else if (val === 'tour') {
-                      actions.navigate('overview');
-                      actions.updateState({ tourOpen: true });
-                    } else if (val === 'studio') actions.navigate('studio');
-                  }}
-                ></mth-speed-dial>
-              </mth-flex>
+              <mth-badge variant="accent">${activeView.ownedTags.length} Primary Tags</mth-badge>
             </div>
 
             <mth-error-boundary fallback-message="Mission panel encountered a recoverable telemetry fault.">
@@ -332,38 +315,97 @@ export function renderAppShell(
         </mth-container>
       </main>
 
-      <aside class="mth-app-shell-aside" aria-label="Live telemetry alert feed">
-        <mth-stack data-gap="3" style="padding-block:1rem;padding-inline:0.75rem">
-          <mth-notification-center
-            inline
-            open
-            heading="Runtime Alert Feed"
-            max-items="6"
-          ></mth-notification-center>
-
-          <mth-cookie-banner
-            heading="Telemetry & Audit Storage"
-            description="AtmosOps stores theme, OKLCH seed, density, and locale preferences locally with zero third-party trackers."
-          ></mth-cookie-banner>
-        </mth-stack>
-      </aside>
-
       <footer class="mth-app-shell-footer">
         <mth-container>
           <mth-flex data-gap="3" data-align="center" data-justify="between" style="flex-wrap:wrap;padding-block:0.5rem">
             <span style="font-size:0.8rem;color:var(--mth-color-fg-muted)">
               AtmosOps Planetary CH₄ Command · Powered by 100% Methane UI v0.1.1 (256/256 tags · DSD SSR)
             </span>
-            <mth-bottom-nav
-              label="Quick workspace jump"
-              active-value=${state.route}
-              active-href=${activeRouteHref}
-              .items=${navData.bottomNavItems}
-              @mth-select=${onNavSelect}
-            ></mth-bottom-nav>
+            <mth-flex data-gap="3" data-align="center" style="flex-wrap:wrap">
+              <mth-clock
+                class="atmos-footer-clock"
+                timezone="UTC"
+                variant="digital"
+                show-seconds
+              ></mth-clock>
+              <mth-breadcrumb-path
+                label="Sector telemetry path"
+                .items=${breadcrumbPathItems}
+                max-items="3"
+              ></mth-breadcrumb-path>
+            </mth-flex>
           </mth-flex>
+
+          <details class="atmos-footer-utilities">
+            <summary>Runtime Alert Feed &amp; Telemetry Preferences</summary>
+            <div class="mth-app-shell-aside atmos-footer-utilities-panel">
+              <mth-notification-center
+                inline
+                open
+                heading="Runtime Alert Feed"
+                max-items="6"
+              ></mth-notification-center>
+
+              <mth-cookie-banner
+                heading="Telemetry & Audit Storage"
+                description="AtmosOps stores theme, OKLCH seed, density, and locale preferences locally with zero third-party trackers."
+              ></mth-cookie-banner>
+            </div>
+          </details>
+
+          <mth-bottom-nav
+            label="Quick workspace jump"
+            active-value=${state.route}
+            active-href=${activeRouteHref}
+            .items=${navData.bottomNavItems}
+            @mth-select=${onNavSelect}
+          ></mth-bottom-nav>
         </mth-container>
       </footer>
+    </div>
+
+    <div class="atmos-floating-actions" aria-label="Quick mission actions">
+      <mth-fab
+        label="Emit Telemetry Test Alert"
+        size="sm"
+        @mth-press=${() =>
+          actions.notify(
+            `Telemetry ping confirmed on ${activeView.title} (${new Date().toISOString().slice(11, 19)}Z)`,
+            'success',
+          )}
+      >
+        <svg
+          slot="icon"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+          style="display:block"
+        >
+          <path
+            d="M8 2a4 4 0 0 0-4 4v2.6L2.8 10.4A.7.7 0 0 0 3.4 11.5h9.2a.7.7 0 0 0 .6-1.1L12 8.6V6a4 4 0 0 0-4-4ZM6.5 12.5a1.5 1.5 0 0 0 3 0"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </mth-fab>
+      <mth-speed-dial
+        label="Quick Mission Actions"
+        direction="up"
+        size="sm"
+        .actions=${SPEED_DIAL_ACTIONS}
+        @mth-action=${(ev: Event) => {
+          const val = (ev as CustomEvent<{ value?: string }>).detail?.value;
+          if (val === 'palette') actions.updateState({ commandPaletteOpen: true });
+          else if (val === 'tour') {
+            actions.navigate('overview');
+            actions.updateState({ tourOpen: true });
+          } else if (val === 'studio') actions.navigate('studio');
+        }}
+      ></mth-speed-dial>
     </div>
 
     <mth-command-palette
